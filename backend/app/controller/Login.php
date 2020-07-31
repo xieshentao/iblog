@@ -1,12 +1,13 @@
 <?php
+
 namespace app\controller;
 
 use app\BaseController;
 
-class Index extends BaseController
+class Login extends BaseController
 {
     /**
-     * i blog首页
+     * JWT单点登陆
      */
     public function index()
     {
