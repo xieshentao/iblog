@@ -1,4 +1,5 @@
 <template>
+  <el-card class="box-card">
 <el-row class="tac">
   <el-col :span="24">
     <el-menu
@@ -46,6 +47,7 @@
     </el-menu>
   </el-col>
 </el-row>
+  </el-card>
 </template>
 <script>
   export default {
@@ -64,10 +66,10 @@
       initSelecteMenu(){
         const pathname = window.location.pathname;
         if(pathname == null) return;
-        
-        const selectedName = pathname.substr(1); 
+
+        const selectedName = pathname.substr(1);
         if(selectedName == null) return;
-        
+
         this.selected = selectedName;
       },
     },

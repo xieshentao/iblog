@@ -64,7 +64,7 @@
   import LeftMenu from '../../components/Menu.vue';
   import Top from '../../components/top.vue';
   export default {
-    name: 'AdminIndex',
+    name: 'Diary',
     components: {
       LeftMenu,
       Top
@@ -82,7 +82,7 @@
 
 <style>
   .main-content{
-    padding: 20px;
+    padding-left: 20px;
   }
   .bg-purple{
     padding-right: 20px;
