@@ -1,0 +1,72 @@
+{
+  "id": "2005505",
+  "name": "iblog",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "8102699",
+      "name": "设置",
+      "font_class": "icon-test",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "9799482",
+      "name": "设置",
+      "font_class": "shezhi",
+      "unicode": "e864",
+      "unicode_decimal": 59492
+    },
+    {
+      "icon_id": "219595",
+      "name": "blog",
+      "font_class": "blog",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
+      "icon_id": "485763",
+      "name": "收 藏",
+      "font_class": "shoucang",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "777845",
+      "name": "分类",
+      "font_class": "icon",
+      "unicode": "e652",
+      "unicode_decimal": 58962
+    },
+    {
+      "icon_id": "947483",
+      "name": "统计",
+      "font_class": "tongji",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "5535066",
+      "name": "cb18-成长日记2",
+      "font_class": "cb-chengchangriji",
+      "unicode": "e64d",
+      "unicode_decimal": 58957
+    },
+    {
+      "icon_id": "7738015",
+      "name": "用户",
+      "font_class": "yonghu",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "9495515",
+      "name": "控制台",
+      "font_class": "kongzhitai",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    }
+  ]
+}
