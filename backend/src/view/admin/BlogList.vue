@@ -14,19 +14,19 @@
   </div>
 </template>
 <script>
-  import LeftMenu from '../../components/Menu.vue';
-  import Top from '../../components/top.vue';
-  export default {
-    name: 'AdminIndex',
-    components: {
-      LeftMenu,
-      Top
-    },
-    data () {
-      return {
-      }
+    import LeftMenu from '../../components/Menu.vue';
+    import Top from '../../components/top.vue';
+    export default {
+        name: 'AdminBlogAdd',
+        components: {
+            LeftMenu,
+            Top
+        },
+        data () {
+            return {
+            }
+        }
     }
-  }
 </script>
 
 <style>

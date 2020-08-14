@@ -28,6 +28,10 @@
         <i class="iconfont iconcb-chengchangriji"></i>
         <span slot="title">日记</span>
       </el-menu-item>
+      <el-menu-item index="adminPlan">
+        <i class="iconfont iconcb-chengchangriji"></i>
+        <span slot="title">计划</span>
+      </el-menu-item>
       <el-menu-item index="adminLabel">
         <i class="iconfont iconicon"></i>
         <span slot="title">分类&标签</span>
