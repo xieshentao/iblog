@@ -44,7 +44,7 @@
                  closable
                  :disable-transitions="false"
                  @close="handleClose(tag)">
-                 {{tag}}
+                 {{tag.name}}
                </el-tag>
                <el-input
                  class="input-new-tag"
@@ -80,7 +80,10 @@
           title:'标题',
           content:'  ',
         },
-        dynamicTags: ['标签一', '标签二', '标签三'],
+        dynamicTags: [
+            {'name':'123','id':'123'},
+            {'name':'456','id':'12'}
+        ],
         inputTagVisible: false,
         inputTagValue: '',
           data: [{

@@ -2,10 +2,11 @@
 namespace app\controller;
 use app\BaseController;
 
-class  IblogBase extends BaseController{
+class IblogBase extends BaseController{
 
     public function __construct()
     {
+
         //验证登陆
         //统计
     }
@@ -43,9 +44,10 @@ class  IblogBase extends BaseController{
  * 10. 设置
  *     a. 网站设置  |主题图 | 网站标题 | 网站图标
  *     b. 通知设置 (email 通知 | 网站通知)
- *                 1.日记未写通知
+ *                 1.日记未写通知  时间
  *                 2.代办事项通知
  *                 3.文章复看通知
+ *                 4.通知方式
  *     c. 网站是否开启登陆
  *
  *

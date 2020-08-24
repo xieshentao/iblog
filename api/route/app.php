@@ -14,4 +14,7 @@ Route::get('think', function () {
     return 'hello,ThinkPHP6!';
 });
 
-Route::get('hello/:name', 'index/hello');
+Route::get('label', 'label/index')->ext('json');
+Route::post('label_add', 'label/add')->ext('json');
+Route::post('label_remove', 'label/remove')->ext('json');
+
