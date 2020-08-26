@@ -2,9 +2,8 @@
 declare (strict_types = 1);
 
 namespace app\validate;
-
-use app\model\Label as LabelModel;
 use think\Validate;
+use think\facade\Db;
 
 class LabelValidate extends Validate
 {
@@ -29,10 +28,8 @@ class LabelValidate extends Validate
         'name.max'    =>'标签名应在1-10个字符'
     ];
 
-
     protected function checkName($value,$rule,$data){
-        $labelModel = new LabelModel();
-        $label = $labelModel->where('name',$value)->where('is_deleted',0)->select();
-        return !$label ? true : "标签'{$value}'已经存在";
+        $rs = Db::table('iblog_label')->where('is_deleted', 0)->where('name',$value)->find();
+        return $rs ? "标签'{$value}'已经存在" : true;
     }
 }

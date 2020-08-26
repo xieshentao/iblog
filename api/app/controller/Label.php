@@ -6,10 +6,9 @@ use app\validate\LabelValidate;
 class Label extends IblogBase{
 
     public function index(){
-
-
-
-
+        $labelModel = new LabelModel();
+        $labelData = $labelModel->where('is_deleted',0)->field('id,name')->select()->toArray();
+        return json($labelData);
     }
 
     public function add(){
@@ -24,7 +23,6 @@ class Label extends IblogBase{
        $labelModel->save();
 
        return json('添加成功');
-
 
     }
 
