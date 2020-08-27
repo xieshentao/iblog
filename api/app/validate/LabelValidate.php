@@ -14,7 +14,8 @@ class LabelValidate extends Validate
      * @var array
      */	
 	protected $rule = [
-	    'name' =>'require|max:10|checkName:thinkPHP'
+	    'name' =>'max:10|checkName:add',
+        'r_name' => 'checkName:remove'
     ];
     
     /**
@@ -24,12 +25,18 @@ class LabelValidate extends Validate
      * @var array
      */	
     protected $message = [
-        'name.require'=>'请输入标签名',
         'name.max'    =>'标签名应在1-10个字符'
     ];
 
     protected function checkName($value,$rule,$data){
         $rs = Db::table('iblog_label')->where('is_deleted', 0)->where('name',$value)->find();
-        return $rs ? "标签'{$value}'已经存在" : true;
+
+        if($rule == 'add'){
+            if(!$value) return "请输入标签名";
+
+            return $rs ? "标签'{$value}'已经存在" : true;
+        }
+        return $rs ? true : "标签'{$value}'不存在";
+
     }
 }

@@ -1,7 +1,9 @@
 <?php
 // 事件定义文件
 return [
-    'bind'      => [
+    'bind'    =>    [
+        'Auth' => 'app\event\Auth',
+        // 更多事件绑定
     ],
 
     'listen'    => [

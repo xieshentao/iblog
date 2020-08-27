@@ -1,15 +1,20 @@
 <?php
 namespace app\controller;
 use app\BaseController;
+use think\facade\Event;
 
 class IblogBase extends BaseController{
 
     public function __construct()
     {
-
-        //验证登陆
-        //统计
+        self::Auth();
     }
+
+
+   private static function Auth(){
+        Event::trigger('Auth');
+
+   }
 }
 
 /*

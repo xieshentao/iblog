@@ -10,11 +10,13 @@
 // +----------------------------------------------------------------------
 use think\facade\Route;
 
-Route::get('think', function () {
-    return 'hello,ThinkPHP6!';
+Route::get('xst', function () {
+    return 'hello,xst!';
 });
 
 Route::get('label', 'label/index')->ext('json');
 Route::post('label_add', 'label/add')->ext('json');
 Route::post('label_remove', 'label/remove')->ext('json');
+
+
 

@@ -52,7 +52,7 @@ class ExceptionHandle extends Handle
     {
         // 参数验证错误
         if($e instanceof ValidateException){
-            return json($e->getError(),422);
+            return error($e->getError(),422);
         }
 
         // 请求异常
