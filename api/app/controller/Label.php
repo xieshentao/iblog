@@ -7,6 +7,11 @@ use think\facade\Db;
 class Label extends IblogBase{
 
     public function index(){
+        echo '<pre>';
+        var_dump($this->request);
+        exit();
+        
+        
         $labelModel = new LabelModel();
         $labelData = $labelModel->where('is_deleted',0)->field('name')->select()->toArray();
         $categoryData = Db::name('category')->select()->toArray();

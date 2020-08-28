@@ -1,20 +1,26 @@
 <?php
 namespace app\controller;
 use app\BaseController;
+use think\exception\HttpException;
+use think\exception\HttpResponseException;
+use think\initializer\Error;
+use think\Request;
+use Firebase\JWT\JWT;
 use think\facade\Event;
 
 class IblogBase extends BaseController{
 
-    public function __construct()
+    public function __construct(Request $request)
     {
-        self::Auth();
+        $this->request = $request;
+
+        //登陆权限认证,参数来自app\middleware\Auth.php;
+        if($request->needAuth && $request->noLogin){
+            throw new HttpException('1000','未登录');
+        }
+
     }
 
-
-   private static function Auth(){
-        Event::trigger('Auth');
-
-   }
 }
 
 /*

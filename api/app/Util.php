@@ -12,7 +12,7 @@ function success($data = null,$code = null){
         'data'   =>$data,
         'code'   =>$code
     ];
-    return $code ? json($res,$code) : json($res);
+    return  json($code);
 }
 
 function error($msg = null,$code = null){
@@ -22,5 +22,5 @@ function error($msg = null,$code = null){
         'code'   =>$code,
 
     ];
-    return $code ? json($res,$code) : json($res);
+    return json($code);
 }
