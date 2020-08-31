@@ -6,6 +6,7 @@ use think\db\exception\ModelNotFoundException;
 use think\exception\Handle;
 use think\exception\HttpException;
 use think\exception\HttpResponseException;
+use think\exception\IblogException;
 use think\exception\ValidateException;
 use think\Response;
 use Throwable;
@@ -25,6 +26,7 @@ class ExceptionHandle extends Handle
         ModelNotFoundException::class,
         DataNotFoundException::class,
         ValidateException::class,
+        IblogException::class,
     ];
 
     /**
@@ -50,18 +52,34 @@ class ExceptionHandle extends Handle
      */
     public function render($request, Throwable $e): Response
     {
-        // 参数验证错误
+
+
+        /*if($request->isAjax()){
+
+             return \response($e->getMessage(),$e->getCode());
+
+        }*/
+        return error($e->getMessage(),$e->getCode());
+
+      /*  // 参数验证错误
         if($e instanceof ValidateException){
-            return error($e->getError(),422);
+            return  $data = ['msg'=>$e->getMessage(),'code'=>$e->getCode()];
+
+            return \response(json_encode($data),$e->getCode());
         }
 
         // 请求异常
         if($e instanceof HttpResponseException && $request->isAjax()){
             return \response($e->getMessage(),$e->getStatusCode());
         }
-        
+
+        if($e instanceof  IblogException){
+            $data = ['msg'=>$e->getMessage(),'code'=>$e->getCode()];
+
+            return \response(json_encode($data),$e->getCode());
+        }*/
 
         // 其他错误交给系统处理
-        return parent::render($request, $e);
+        // return parent::render($request, $e);
     }
 }

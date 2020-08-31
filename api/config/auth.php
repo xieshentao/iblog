@@ -11,6 +11,12 @@ $need = [
 ];
 
 $noNeed = [
+    'login'
+];
+
+//非 boss 权限
+$noNeedBoss = [
+
 ];
 
 
@@ -22,4 +28,5 @@ $noNeed = [
 return [
     'noNeed'=>$noNeed,
     'need'   =>$need,
+    'noNeedBoss' => $noNeedBoss,
 ];

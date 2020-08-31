@@ -2,6 +2,7 @@
 declare (strict_types = 1);
 
 namespace app\middleware;
+use app\model\Users;
 use think\facade\Config;
 use think\route\Rule;
 
@@ -31,10 +32,35 @@ class Auth
             $request->needAuth = false;
         }
 
-        //需要权限验证时判断登陆状态
-        $request->noLogin = true;
+        if(!$request->needAuth) return $next($request);
+
+        //登陆验证
+        $server = $request->server();
+        $token = $server['HTTP_TOKEN'];
+        $check = checkToken($token);
 
 
+        if($check['code'] != 0){
+            $request->authStatusCode = $check['code'];
+            return $next($request);
+        }
+
+        $email = $check['data']->email;
+        $user = Users::Where('email',$email)->find();
+        if(!$user){
+            $request->authStatusCode = 1001;
+            return $next($request);
+        }
+
+        if($user->status != 1){
+            $request->authStatusCode = 1005;
+            return $next($request);
+        }
+
+
+        //更新token 时间
+        $request->authStatusCode = 0;
         return $next($request);
+
     }
 }

@@ -1,33 +1,47 @@
 <?php
 namespace app\controller;
 use app\BaseController;
-use think\exception\HttpException;
-use think\exception\HttpResponseException;
-use think\initializer\Error;
+use think\exception\IblogException;
 use think\Request;
-use Firebase\JWT\JWT;
-use think\facade\Event;
 
 class IblogBase extends BaseController{
 
     public function __construct(Request $request)
     {
         $this->request = $request;
+        $this->Auth();
+
+    }
+
+
+    public function Auth(){
+        $request = $this->request;
+
+        $msgMap = [
+            '1000' => '未登录',
+            '1001' => '账户不存在',
+            '1002' => '密码错误',
+            '1003' => '权限不足',
+            '1004' => '登陆状态失效',
+            '1005' => '用户已被禁用',
+            '1006' => '登陆错误',
+        ];
 
         //登陆权限认证,参数来自app\middleware\Auth.php;
-        if($request->needAuth && $request->noLogin){
-            throw new HttpException('1000','未登录');
+        if($request->needAuth && in_array($request->authStatusCode,array_keys($msgMap))){
+            throw new IblogException($msgMap[$request->authStatusCode],$request->authStatusCode);
         }
 
     }
 
 }
 
+
 /*
  * admin api
  *
- * 1.登陆  jwt 单点登陆   |  注册 邮箱注册  |  找回密码   --------> 注册默认头像
- * 2.控制台  [pv、uv、待办、（本周|本月统计）、通知]
+ * 1.登陆  jwt 单点登陆   |  注册 邮箱注册  |  找回密码   --------> 注册默认头像     ---> 中间件
+ * 2.控制台  [pv、uv、待办、（本周|本月统计）、通知]   --->事件
  * 3.blog
  *      a. 新增
  *          -标题；
@@ -42,7 +56,7 @@ class IblogBase extends BaseController{
  * 6.分类 (二级分类)[有文章时不可删除]   标签 [可删除]
  * 7.用户 [boss,stuff]
  *        boss: a.控制台可查看系统 pv uv ;
- *              b.blog 操作时  可以选择所有的用户 ;
+ *              b.blog 操作时   可以选择所有的用户 ;
  *              c.可操作分类与  标签；
  *              d.setting -
  *                        -网站设置
@@ -51,7 +65,6 @@ class IblogBase extends BaseController{
  * 8.统计
  *     a : 文章查看 | 写文章 | 写日记  | 访问站点 | 后台访问 | ----> pv  与  iv
  *
- * 9.  收藏
  * 10. 设置
  *     a. 网站设置  |主题图 | 网站标题 | 网站图标
  *     b. 通知设置 (email 通知 | 网站通知)

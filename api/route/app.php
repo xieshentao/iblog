@@ -14,9 +14,13 @@ Route::get('xst', function () {
     return 'hello,xst!';
 });
 
+Route::post('login', 'auth/login');
+Route::post('register', 'auth/register');
+
 Route::get('label', 'label/index')->ext('json');
 Route::post('label_add', 'label/add')->ext('json');
 Route::post('label_remove', 'label/remove')->ext('json');
+
 
 
 
