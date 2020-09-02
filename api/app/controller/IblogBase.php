@@ -8,6 +8,9 @@ class IblogBase extends BaseController{
 
     public function __construct(Request $request)
     {
+        header('Content-Type: text/html;charset=utf-8');
+        header('Access-Control-Allow-Origin:*');
+
         $this->request = $request;
         $this->Auth();
 

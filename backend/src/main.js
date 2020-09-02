@@ -6,11 +6,14 @@ import 'element-ui/lib/theme-chalk/index.css'
 import '../static/iconfont/iconfont.css'
 import App from './App.vue'
 import router from './router';
+import store from './store';
+import util from 'util';
 
 Vue.use(ElementUI)
 
 new Vue({
   el: '#app',
+  store,
   router,
   render: h => h(App)
 })

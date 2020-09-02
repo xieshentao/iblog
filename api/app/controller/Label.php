@@ -18,6 +18,7 @@ class Label extends IblogBase{
 
     public function add(){
        $name = input('label_name');
+       if(trim($name) == '') return error('标签名不能为空!');
 
        validate(LabelValidate::class)->check([
            'name'=>$name
@@ -32,7 +33,7 @@ class Label extends IblogBase{
     }
 
     public function remove(){
-        $name = input('label_name');
+        $name = input('name');
 
         validate(LabelValidate::class)->check([
             'r_name'=>$name

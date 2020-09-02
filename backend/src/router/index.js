@@ -10,7 +10,6 @@ import AdminDiary from '../view/admin/Diary.vue';
 import AdminLabel from '../view/admin/Label.vue';
 import AdminUser  from '../view/admin/User.vue';
 import AdminCount  from '../view/admin/Count.vue';
-import AdminCollect from '../view/admin/Collect';
 import AdminPlan  from '../view/admin/Plan.vue'
 import AdminSetting from '../view/admin/Setting.vue';
 
@@ -68,11 +67,6 @@ const routes = [
     path: '/adminCount',
     name: 'AdminCount',
     component: AdminCount
-  },
-  {
-    path: '/adminCollect',
-    name: 'AdminCollect',
-    component: AdminCollect
   },
     {
       path: '/adminSetting',

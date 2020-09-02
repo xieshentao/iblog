@@ -44,10 +44,6 @@
         <i class="iconfont icontongji"></i>
         <span slot="title">统计</span>
       </el-menu-item>
-      <el-menu-item index="adminCollect">
-        <i class="iconfont iconshoucang"></i>
-        <span slot="title">收藏</span>
-      </el-menu-item>
       <el-menu-item index="adminSetting">
         <i class="iconfont iconshezhi"></i>
         <span slot="title">设置</span>

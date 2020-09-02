@@ -39,7 +39,7 @@
             <div class="grid-content bg-purple-light">
                <el-tag
                  class="tag"
-                 :key="tag"
+                 :key="tag.name"
                  v-for="tag in dynamicTags"
                  closable
                  :disable-transitions="false"
@@ -68,6 +68,9 @@
 <script>
   import LeftMenu from '../../components/Menu.vue';
   import Top from '../../components/top.vue';
+  import {mapState} from "vuex";
+  import util from "@/util";
+
   export default {
     name: 'AdminIndex',
     components: {
@@ -81,51 +84,20 @@
           content:'  ',
         },
         dynamicTags: [
-            {'name':'123','id':'123'},
-            {'name':'456','id':'12'}
         ],
         inputTagVisible: false,
         inputTagValue: '',
-          data: [{
-              label: '一级 1',
-              children: [{
-                  label: '二级 1-1',
-                  children: [{
-                      label: '三级 1-1-1'
-                  }]
-              }]
-          }, {
-              label: '一级 2',
-              children: [{
-                  label: '二级 2-1',
-                  children: [{
-                      label: '三级 2-1-1'
-                  }]
-              }, {
-                  label: '二级 2-2',
-                  children: [{
-                      label: '三级 2-2-1'
-                  }]
-              }]
-          }, {
-              label: '一级 3',
-              children: [{
-                  label: '二级 3-1',
-                  children: [{
-                      label: '三级 3-1-1'
-                  }]
-              }, {
-                  label: '二级 3-2',
-                  children: [{
-                      label: '三级 3-2-1'
-                  }]
-              }]
-          }],
       }
+    },
+    computed: {
+      ...mapState({
+        api: state => state.api,
+      })
     },
     methods: {
       handleClose(tag) {
-        this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+        this.delLabel(tag);
+       // this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
       },
 
       showInput() {
@@ -137,12 +109,41 @@
 
       handleInputConfirm() {
         let inputTagValue = this.inputTagValue;
-        if (inputTagValue) {
-          this.dynamicTags.push(inputTagValue);
-        }
+        this.addLabel(inputTagValue);
         this.inputTagVisible = false;
         this.inputTagValue = '';
+      },
+      showLabel(){
+        util.get(this.api+"label.json",{},(rst)=>{
+          if(rst.success){
+              this.dynamicTags = rst.data.label;
+          }else{
+              this.$message.error(rst.msg || '出错了噢~');
+          }
+        });
+      },
+      addLabel(label){
+         let Label = {name:label};
+         util.post(this.api+"label_add.json",{label_name:label},(rst)=>{
+              if(rst.success){
+                  this.dynamicTags.push(Label);
+              }else{
+                  this.$message.error(rst.msg || '出错了噢~');
+              }
+         });
+      },
+      delLabel(tag){
+          util.post(this.api+"label_remove.json",tag,(rst)=>{
+              if(rst.success){
+                  this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+              }else{
+                  this.$message.error(rst.msg || '出错了噢~');
+              }
+          });
       }
+    },
+    created(){
+      this.showLabel();
     }
   }
 </script>

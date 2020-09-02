@@ -1,7 +1,7 @@
 {
-  "name": "yes",
+  "name": "Iblog",
   "version": "1.0.0",
-  "description": "iblog",
+  "description": "Iblog",
   "author": "xst",
   "private": true,
   "scripts": {
@@ -16,7 +16,8 @@
     "element-ui": "^2.13.2",
     "mavon-editor": "^2.9.0",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

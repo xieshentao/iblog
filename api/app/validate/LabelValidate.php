@@ -29,11 +29,10 @@ class LabelValidate extends Validate
     ];
 
     protected function checkName($value,$rule,$data){
-        $rs = Db::table('iblog_label')->where('is_deleted', 0)->where('name',$value)->find();
+        $rs = Db::table('iblog_label')->where('is_deleted', 0)->where('name','=',$value)->find();
+      //  echo $value;exit();
 
         if($rule == 'add'){
-            if(!$value) return "请输入标签名";
-
             return $rs ? "标签'{$value}'已经存在" : true;
         }
         return $rs ? true : "标签'{$value}'不存在";
