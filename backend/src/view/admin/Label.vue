@@ -99,7 +99,9 @@
         this.delLabel(tag);
        // this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
       },
-
+      getHeader() {
+          return this.$cookies.get("iblog_user_auth");
+      },
       showInput() {
         this.inputTagVisible = true;
         this.$nextTick(_ => {
@@ -120,7 +122,7 @@
           }else{
               this.$message.error(rst.msg || '出错了噢~');
           }
-        });
+        },this.getHeader());
       },
       addLabel(label){
          let Label = {name:label};
@@ -130,7 +132,7 @@
               }else{
                   this.$message.error(rst.msg || '出错了噢~');
               }
-         });
+         },this.getHeader());
       },
       delLabel(tag){
           util.post(this.api+"label_remove.json",tag,(rst)=>{
@@ -139,7 +141,7 @@
               }else{
                   this.$message.error(rst.msg || '出错了噢~');
               }
-          });
+          },this.getHeader());
       }
     },
     created(){

@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 export default{
-    get(url, data, cb, needToken = 0) {
+    get(url, data, cb, token){
        let g = {
             method: 'GET',
             url: url,
@@ -11,14 +11,14 @@ export default{
             success: (data) => cb(data),
             error: (data) => cb(data)
         };
-       if (needToken == 1) {
+       if (token) {
             g.headers = {
-                'token': '123',
+                token: token,
             };
         }
         $.ajax(g);
     },
-    post(url, data = {}, cb,needToken = 0) {
+    post(url, data = {}, cb,token) {
         let g = {
             method: 'post',
             url: url,
@@ -28,11 +28,11 @@ export default{
             success: (data) => cb(data),
             error: (data) => cb(data)
         };
-      if (needToken == 1) {
+      if (token) {
         g.headers = {
-          'token': '123',
+          token: token,
         };
       }
       $.ajax(g);
     },
-}
+  }

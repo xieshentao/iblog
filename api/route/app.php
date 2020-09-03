@@ -17,9 +17,9 @@ Route::get('xst', function () {
 Route::post('login', 'auth/login');
 Route::post('register', 'auth/register');
 
-Route::get('label', 'label/index')->ext('json');
-Route::post('label_add', 'label/add')->ext('json');
-Route::post('label_remove', 'label/remove')->ext('json');
+Route::rule('label', 'label/index','options|get')->ext('json');
+Route::rule('label_add', 'label/add','options|post')->ext('json');
+Route::rule('label_remove', 'label/remove','options|post')->ext('json');
 
 
 

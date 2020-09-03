@@ -4,8 +4,8 @@
     <el-menu-item>Iblog&nbsp;&nbsp;&nbsp;美好的事情在等着你</el-menu-item>
     <el-submenu index="2" class="top-item">
       <template slot="title">小涛涛</template>
-      <el-menu-item index="exit">About Me</el-menu-item>
-      <el-menu-item index="exit">退出</el-menu-item>
+      <el-menu-item index="about">About Me</el-menu-item>
+      <el-menu-item index="exit" v-on:click="exit">退出</el-menu-item>
     </el-submenu>
   </el-menu>
   </el-card>
@@ -21,7 +21,11 @@
     methods: {
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
-      }
+      },
+        exit(){
+            this.$cookies.remove('iblog_user_auth');
+            location.href = '/Login';
+        }
     }
   }
 </script>

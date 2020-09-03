@@ -2,6 +2,7 @@
 // 应用公共文件
 $files = [
     'Util.php',
+    'IblogException.php'
 ];
 
 

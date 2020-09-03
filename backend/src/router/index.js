@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
+
+import Login from '../view/admin/Login';
 //后台
 import AdminIndex from '../view/admin/Index.vue';
 import AdminBlogAdd from '../view/admin/BlogAdd.vue';
@@ -10,18 +12,21 @@ import AdminDiary from '../view/admin/Diary.vue';
 import AdminLabel from '../view/admin/Label.vue';
 import AdminUser  from '../view/admin/User.vue';
 import AdminCount  from '../view/admin/Count.vue';
-import AdminPlan  from '../view/admin/Plan.vue'
+import AdminPlan  from '../view/admin/Plan.vue';
 import AdminSetting from '../view/admin/Setting.vue';
 
-
-Vue.use(Router)
-
+Vue.use(Router);
 
 const routes = [
     {
       path: '/',
       name: 'AdminIndex',
       component: AdminIndex
+    },
+    {
+      path:'/Login',
+      name:'Login',
+      component:Login,
     },
     {
       path: '/admin',
@@ -78,5 +83,5 @@ const routes = [
 export default new Router({
   mode: 'history',
   routes,
-  base:''
+  base:'',
 })

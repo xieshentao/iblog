@@ -1,7 +1,7 @@
 <?php
 namespace app\model;
-
 use think\Model;
+use IblogException;
 
 class Users extends Model{
 

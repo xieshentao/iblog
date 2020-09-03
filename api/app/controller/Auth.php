@@ -10,7 +10,6 @@ class Auth extends IblogBase {
 
     private static $salt = 'Iblog';
 
-
     public function login(){
         $request = $this->request;
         $email = $request->post('email');
@@ -31,25 +30,12 @@ class Auth extends IblogBase {
 
         $token = getToken($user->email);
 
-        echo '<pre>';
-        var_dump($token);
-        exit();
-
-
-
-
-
-
-
-
-
-        return success('登陆成功');
+        return success($token);
 
 
 
 
     }
-
 
     public function register(){
         $request = $this->request;
@@ -82,11 +68,16 @@ class Auth extends IblogBase {
 
         return success('注册成功,即将跳转登陆...');
 
-
     }
 
 
     public function password(){
+
+    }
+
+
+    public function checkLogin(){
+        $request = $this->request;
 
     }
 
