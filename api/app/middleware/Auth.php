@@ -18,6 +18,13 @@ class Auth
     public function handle($request, \Closure $next)
     {
 
+        //允许跨域
+        header('Access-Control-Allow-Origin:*'); // *代表允许任何网址请求
+        header('Access-Control-Allow-Methods:POST,GET,OPTIONS,DELETE'); // 允许请求的类型
+        header('Access-Control-Allow-Credentials: true'); // 设置是否允许发送 cookies
+        header('Access-Control-Allow-Headers: token,Content-Type,Content-Length,Accept-Encoding,X-Requested-with, Origin'); // 设置允许自定义请求头的字段
+
+
         $rule = $request->rule()->getRule();
 
         //验证是否需要权限验证
@@ -36,7 +43,7 @@ class Auth
 
         //登陆验证
         $server = $request->server();
-        $token = $server['HTTP_TOKEN'];
+        $token = @$server['HTTP_TOKEN'];
         $check = checkToken($token);
 
 
@@ -56,7 +63,6 @@ class Auth
             $request->authStatusCode = 1005;
             return $next($request);
         }
-
 
         //更新token 时间
         $request->authStatusCode = 0;

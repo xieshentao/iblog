@@ -11,7 +11,7 @@ export default{
             success: (data) => cb(data),
             error: (data) => cb(data)
         };
-       if (token) {
+      if (token) {
             g.headers = {
                 token: token,
             };

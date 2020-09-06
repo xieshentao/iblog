@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-
+import util from '../util.js';
 import Login from '../view/admin/Login';
 //后台
 import AdminIndex from '../view/admin/Index.vue';
@@ -79,6 +79,14 @@ const routes = [
       component: AdminSetting
     },
 ];
+
+
+
+
+
+
+
+
 
 export default new Router({
   mode: 'history',
