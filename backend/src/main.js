@@ -12,16 +12,22 @@ Vue.use(VueCookies);
 Vue.use(ElementUI);
 
 //路由前置守卫
-router.beforeEach((to,from,next)=>{
-  //判断是否登陆
-  let cookies = VueCookies.$cookies.get('iblog_user_auth');
-  if(cookies){
-    to = from
-  }else{
-    to = '/Login';
-  }
-  next(to);
-});
+
+/*function beforeRoute(){
+  var that = this;
+  router.beforeEach((to,from,next)=>{
+    //判断是否登陆
+    let cookies = that.$cookies.get('iblog_user_auth');
+    if(cookies){
+      to = from
+    }else{
+      to = '/Login';
+    }
+    next(to);
+  });
+}
+
+beforeRoute();*/
 
 /*router.beforeEach((to, from, next) => {
   // 如果有token 说明该用户已登陆

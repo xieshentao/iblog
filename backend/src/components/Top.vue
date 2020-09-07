@@ -34,7 +34,7 @@
   #app-name{
     display: inline;
     margin-left: 20px;
-    color: #e0e0e0;
+    color: white;
   }
 
   .top-item{
@@ -48,5 +48,6 @@
   }
   .top-box{
     margin-bottom:20px;
+    background-color: #393D49;
   }
 </style>
