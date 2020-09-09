@@ -21,6 +21,25 @@ Route::rule('label', 'label/index','options|get')->ext('json');
 Route::rule('label_add', 'label/add','options|post')->ext('json');
 Route::rule('label_remove', 'label/remove','options|post')->ext('json');
 
+Route::rule('category', 'category/index','options|get')->ext('json');
+Route::rule('category_add', 'category/add','options|post')->ext('json');
+Route::rule('category_remove', 'category/remove','options|post')->ext('json');
+
+Route::rule('blog/list', 'blog/index','options|get')->ext('json');
+Route::rule('blog/tags', 'blog/blogTags','options|get')->ext('json');
+Route::rule('blog/category', 'blog/blogCategory','options|get')->ext('json');
+
+Route::group('blog/category', function () {
+    Route::rule(':name', 'blog/blogCategory');
+    Route::rule('/', 'blog/blogCategory');
+})->ext('json');
+
+
+
+
+//Route::rule('blog/:name', 'blog/blog','options|get')->ext('json');
+//Route::rule('category_remove', 'category/remove','options|post')->ext('json');
+
 
 
 

@@ -10,9 +10,8 @@ class Label extends IblogBase{
 
         $labelModel = new LabelModel();
         $labelData = $labelModel->where('is_deleted',0)->field('name')->select()->toArray();
-        $categoryData = Db::name('category')->select()->toArray();
 
-        return success(['label'=>$labelData,'category'=>$categoryData]);
+        return success(['label'=>$labelData]);
 
     }
 

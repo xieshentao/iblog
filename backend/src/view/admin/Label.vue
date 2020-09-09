@@ -15,21 +15,57 @@
             <h3>分类</h3>
             <div class="grid-content bg-purple">
               <el-row>
-              <el-form ref="form" :model="form" label-width="80px">
+              <el-form ref="form" label-width="80px">
                 <el-form-item label="父类">
-                  <el-select v-model="form.region" placeholder="请选择分类">
-                    <el-option label="PHP" value="shanghai"></el-option>
-                    <el-option label="MYSQL" value="beijing"></el-option>
+                  <el-select v-model="parentCategory" placeholder="——父级分类名称——">
+                    <el-option
+                      v-for="item in parentCategoryData"
+                      :key="item"
+                      :label="item"
+                      :value="item">
+                    </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="名称">
-                  <el-input v-model="form.name" style="width:120px"></el-input>
-                  <el-button type="primary" @click="onSubmit">立即创建</el-button>
+                  <el-input v-model="categoryName" style="width:120px"></el-input>
+                  <el-button type="primary" @click="saveCategory">立即创建</el-button>
                 </el-form-item>
               </el-form>
               </el-row>
+              <!--所有分类-->
               <el-row class="type-box">
-                <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                <el-table
+                  height="500"
+                  v-loading="loading"
+                  :data="categoryData"
+                  style="width: 100%">
+                  <el-table-column
+                    fixed
+                    prop="name"
+                    label="父分类"
+                    style="width: 30%">
+                  </el-table-column>
+                  <el-table-column
+                    fixed
+                    prop="childName"
+                    label="子分类"
+                    style="width: 30%">
+                  </el-table-column>
+                  <el-table-column
+                    prop="articleCount"
+                    label="文章数"
+                    style="width: 10%">
+                  </el-table-column>
+                  <el-table-column
+                    fixed="right"
+                    label="操作"
+                    style="width: 30%">
+                    <template slot-scope="scope">
+                      <el-button @click="delCategory(scope.row)" type="text" size="small">删除</el-button>
+                      <el-button type="text" size="small">编辑</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
               </el-row>
             </div>
           </el-col>
@@ -79,12 +115,12 @@
     },
     data () {
       return {
-        form:{
-          title:'标题',
-          content:'  ',
-        },
-        dynamicTags: [
-        ],
+        loading:true,
+        categoryData:[],
+        parentCategory:'——父级分类名称——',
+        categoryName:'',
+        parentCategoryData:[],
+        dynamicTags: [],
         inputTagVisible: false,
         inputTagValue: '',
       }
@@ -95,9 +131,43 @@
       })
     },
     methods: {
+      saveCategory(){
+        const data = {parent:this.parentCategory,name:this.categoryName};
+        util.post(this.api+'/category_add.json',data,(res)=>{
+            if(res.success){
+                this.$message({
+                    message: '创建成功',
+                    type: 'success'
+                });
+                this.categoryName = '';
+                this.showCategory();
+            }else{
+                this.$message.error(res.msg || '出错了噢~');
+            }
+        },this.getHeader());
+      },
+      showCategory(){
+        util.get(this.api+"category.json",{},(rst)=>{
+            if(rst.success){
+                this.parentCategoryData = rst.data.parent;
+                this.categoryData = rst.data.categoryData;
+            }else{
+                this.$message.error(rst.msg || '出错了噢~');
+            }
+            this.loading = false;
+        },this.getHeader());
+      },
+      delCategory(row){
+        util.post(this.api+"category_remove.json",{category_id:row.id},(rst)=>{
+            if(rst.success){
+                this.showCategory();
+            }else{
+                this.$message.error(rst.msg || '出错了噢~');
+            }
+        },this.getHeader());
+      },
       handleClose(tag) {
         this.delLabel(tag);
-       // this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
       },
       getHeader() {
           return this.$cookies.get("iblog_user_auth");
@@ -146,6 +216,7 @@
     },
     created(){
       this.showLabel();
+      this.showCategory();
     }
   }
 </script>

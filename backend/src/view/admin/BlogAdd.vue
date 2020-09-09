@@ -11,42 +11,66 @@
         <el-card class="box-card">
           <el-row gutter="20" class="">
             <el-col :span="20">
-              <el-input v-model="title" id = 'blog-title' placeholder="“请输入标题”"></el-input>
-              <Editor v-model="detail"></Editor>
+              <el-input v-model="blogTitle" id = 'blog-title' placeholder="“请输入标题”"></el-input>
+              <mavon-editor
+                v-model="blogContent"
+                ref="md"
+                @change="dataChange"
+                style="min-height: 600px"
+              />
             </el-col>
             <el-col :span="4">
               <el-row>
-                <el-col :span="12"><el-button plain style="width: 90%">保存</el-button></el-col>
+                <el-col :span="12"><el-button plain style="width: 90%" v-on:click="saveBlog">保存</el-button></el-col>
                 <el-col :span="12"><el-button type="primary" style="width: 90%">发布</el-button></el-col>
               </el-row>
               <el-row>
                <h3>标签</h3>
                 <el-select
-                  v-model="value10"
+                  v-model="selectedTags"
                   multiple
                   filterable
                   allow-create
                   default-first-option
                   placeholder="请选择文章标签" style="width: 95%">
                   <el-option
-                    v-for="item in options5"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                    v-for="item in tags"
+                    :key="item"
+                    :value="item">
                   </el-option>
                 </el-select>
                 <h3>分类</h3>
+                <div style="max-height: 220px;overflow: auto">
                 <el-tree
-                  :data="data2"
+                  :data="categoryData"
                   show-checkbox
                   node-key="id"
-                  :default-expanded-keys="[2, 3]"
-                  :default-checked-keys="[5]"
+                  :default-expanded-keys="[]"
+                  :default-checked-keys="[]"
                   :props="defaultProps">
                 </el-tree>
+                </div>
+                <el-link v-if="!isAddCategoryNow" v-on:click="isAddCategoryNow = !isAddCategoryNow" type="primary">添加新分类</el-link>
+                <!--添加新标签-->
+                <el-row v-else>
+                  <el-select v-model="parentCategory" placeholder="——父级分类名称——" style="width:95%;margin: 8px 0px;">
+                    <el-option
+                      v-for="item in parentCategoryData"
+                      :key="item"
+                      :label="item"
+                      :value="item">
+                    </el-option>
+                  </el-select>
+                  <el-input v-model="categoryName" placeholder='分类名称' style="width:95%;margin-bottom: 8px;"></el-input>
+                  <div>
+                    <el-link  type="primary" v-on:click="confirmAddCategory">确定</el-link>
+                    <el-link  type="primary" v-on:click="isAddCategoryNow = !isAddCategoryNow">取消</el-link>
+                  </div>
+                </el-row>
+
                 <h3>可见</h3>
                 <el-switch
-                  v-model="value3"
+                  v-model="isShow"
                   active-text="可见"
                   inactive-text="不可见">
                 </el-switch>
@@ -61,69 +85,96 @@
 <script>
     import LeftMenu from '../../components/Menu.vue';
     import Top from '../../components/top.vue';
-    import Editor from "../../components/Editor";
+    // 导入组件 及 组件样式
+    import { mavonEditor } from 'mavon-editor'
+    import 'mavon-editor/dist/css/index.css'
+    import util from "../../util";
+    import {mapState} from "vuex";
+
     export default {
         name: 'Diary',
         components: {
             LeftMenu,
             Top,
-            Editor
+            mavonEditor,
+        },
+        computed: {
+            ...mapState({
+                api: state => state.api,
+            })
         },
         data () {
             return {
-                title:'',
-                options5: [{
-                    value: 'HTML',
-                    label: 'HTML'
-                }, {
-                    value: 'CSS',
-                    label: 'CSS'
-                }, {
-                    value: 'JavaScript',
-                    label: 'JavaScript'
-                }],
-                value10: [],
-                data2: [{
-                    id: 1,
-                    label: '一级 1',
-                    children: [{
-                        id: 4,
-                        label: '二级 1-1',
-                        children: [{
-                            id: 9,
-                            label: '三级 1-1-1'
-                        }, {
-                            id: 10,
-                            label: '三级 1-1-2'
-                        }]
-                    }]
-                }, {
-                    id: 2,
-                    label: '一级 2',
-                    children: [{
-                        id: 5,
-                        label: '二级 2-1'
-                    }, {
-                        id: 6,
-                        label: '二级 2-2'
-                    }]
-                }, {
-                    id: 3,
-                    label: '一级 3',
-                    children: [{
-                        id: 7,
-                        label: '二级 3-1'
-                    }, {
-                        id: 8,
-                        label: '二级 3-2'
-                    }]
-                }],
+                blogTitle:'',
+                blogContent:'',
+                blogHtml:'',
+                savedContent:'',
+                tags: [],
+                selectedTags: [],
+                categoryData:[],
                 defaultProps: {
                     children: 'children',
                     label: 'label'
                 },
-                value3: true,
+                isShow: true,
+                isAddCategoryNow : false,
+                parentCategory:'——父级分类名称——',
+                categoryName:'',
+                parentCategoryData:[],
             }
+        },
+        methods:{
+            saveBlog(){
+                console.log(this.selectedTags)
+              //util.post(this.api+'/blog_editor')
+            },
+            dataChange(value,render){
+              this.blogHtml = render;
+            },
+            showTags(){
+                util.get(this.api+"blog/tags.json",{},(res)=>{
+                    if(res.success){
+                        this.tags = res.data.tags;
+                        this.selectedTags = res.data.selectedTags;
+                    }
+                },this.getHeader());
+            },
+            showCategory(){
+                util.get(this.api+"blog/category.json",{},(res)=>{
+                    if(res.success){
+                        this.categoryData = res.data.category;
+                    }
+                },this.getHeader());
+                util.get(this.api+"category.json",{},(rst)=>{
+                    if(rst.success){
+                        this.parentCategoryData = rst.data.parent;
+                    }else{
+                        this.$message.error(rst.msg || '出错了噢~');
+                    }
+                },this.getHeader());
+            },
+            confirmAddCategory(){
+                const data = {parent:this.parentCategory,name:this.categoryName};
+                util.post(this.api+'/category_add.json',data,(res)=>{
+                    if(res.success){
+                        this.$message({
+                            message: '创建成功',
+                            type: 'success'
+                        });
+                        this.categoryName = '';
+                        this.showCategory();
+                    }else{
+                        this.$message.error(res.msg || '出错了噢~');
+                    }
+                },this.getHeader());
+            },
+            getHeader() {
+                return this.$cookies.get("iblog_user_auth");
+            },
+        },
+        created() {
+            this.showTags();
+            this.showCategory();
         }
     }
 </script>
