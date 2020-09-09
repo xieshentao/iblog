@@ -28,12 +28,7 @@ Route::rule('category_remove', 'category/remove','options|post')->ext('json');
 Route::rule('blog/list', 'blog/index','options|get')->ext('json');
 Route::rule('blog/tags', 'blog/blogTags','options|get')->ext('json');
 Route::rule('blog/category', 'blog/blogCategory','options|get')->ext('json');
-
-Route::group('blog/category', function () {
-    Route::rule(':name', 'blog/blogCategory');
-    Route::rule('/', 'blog/blogCategory');
-})->ext('json');
-
+Route::rule('blog/blog_editor', 'blog/blogEditor','options|post')->ext('json');
 
 
 

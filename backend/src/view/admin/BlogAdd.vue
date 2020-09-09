@@ -16,7 +16,7 @@
                 v-model="blogContent"
                 ref="md"
                 @change="dataChange"
-                style="min-height: 600px"
+                style="min-height: 800px"
               />
             </el-col>
             <el-col :span="4">
@@ -40,13 +40,19 @@
                   </el-option>
                 </el-select>
                 <h3>分类</h3>
-                <div style="max-height: 220px;overflow: auto">
+                <el-input
+                  placeholder="输入关键字进行过滤"
+                  v-model="filterText">
+                </el-input>
+                <div style="max-height: 220px;overflow: auto;margin: 8px 0px;">
                 <el-tree
+                  ref='tree'
                   :data="categoryData"
                   show-checkbox
                   node-key="id"
                   :default-expanded-keys="[]"
                   :default-checked-keys="[]"
+                  :filter-node-method="filterNode"
                   :props="defaultProps">
                 </el-tree>
                 </div>
@@ -116,17 +122,42 @@
                     children: 'children',
                     label: 'label'
                 },
+                loading:'',
                 isShow: true,
                 isAddCategoryNow : false,
                 parentCategory:'——父级分类名称——',
                 categoryName:'',
                 parentCategoryData:[],
+                filterText: '',
             }
         },
         methods:{
             saveBlog(){
-                console.log(this.selectedTags)
-              //util.post(this.api+'/blog_editor')
+                this.openFullScreen()
+                const data = {
+                  'selectTags':this.selectedTags,
+                  'selectCategory':this.$refs.tree.getCheckedKeys(),
+                  'isShow':this.isShow,
+                  'blogTitle':this.blogTitle,
+                  'blogContent':this.blogContent,
+                  'blogHtml':this.blogHtml,
+                }
+                console.log(this.selectedTags);
+                console.log(this.$refs.tree.getCheckedKeys());
+
+                util.post(this.api+'blog/blog_editor.json',data,(res)=>{
+                  if(res.success){
+                      this.$message({
+                          message: '保存成功',
+                          type: 'success'
+                      });
+
+                  }else{
+                      this.$message.error(res.msg || '出错了噢~');
+                  }
+                  this.loading.close();
+                },this.getHeader())
+
             },
             dataChange(value,render){
               this.blogHtml = render;
@@ -153,6 +184,10 @@
                     }
                 },this.getHeader());
             },
+            filterNode(value, data) {
+                    if (!value) return true;
+                    return data.label.indexOf(value) !== -1;
+            },
             confirmAddCategory(){
                 const data = {parent:this.parentCategory,name:this.categoryName};
                 util.post(this.api+'/category_add.json',data,(res)=>{
@@ -171,6 +206,19 @@
             getHeader() {
                 return this.$cookies.get("iblog_user_auth");
             },
+            openFullScreen() {
+                      this.loading = this.$loading({
+                      lock: true,
+                      text: '正在保存中...',
+                      spinner: 'el-icon-loading',
+                      background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                  }
+        },
+         watch: {
+              filterText(val) {
+                this.$refs.tree.filter(val);
+              }
         },
         created() {
             this.showTags();

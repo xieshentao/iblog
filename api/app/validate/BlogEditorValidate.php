@@ -14,6 +14,7 @@ class BlogEditorValidate extends Validate
      * @var array
      */
     protected $rule = [
+        'title' =>'require',
 
     ];
 
@@ -24,7 +25,7 @@ class BlogEditorValidate extends Validate
      * @var array
      */
     protected $message = [
-
+        'title.require' =>'请输入文章标题'
     ];
 
 
