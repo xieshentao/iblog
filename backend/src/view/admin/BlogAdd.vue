@@ -111,6 +111,7 @@
         },
         data () {
             return {
+                blogId:'',
                 blogTitle:'',
                 blogContent:'',
                 blogHtml:'',
@@ -133,20 +134,19 @@
         },
         methods:{
             saveBlog(){
-                this.openFullScreen()
+                this.openFullScreen();
                 const data = {
+                  'blogId':this.blogId,
                   'selectTags':this.selectedTags,
                   'selectCategory':this.$refs.tree.getCheckedKeys(),
                   'isShow':this.isShow,
                   'blogTitle':this.blogTitle,
                   'blogContent':this.blogContent,
                   'blogHtml':this.blogHtml,
-                }
-                console.log(this.selectedTags);
-                console.log(this.$refs.tree.getCheckedKeys());
-
-                util.post(this.api+'blog/blog_editor.json',data,(res)=>{
+                };
+                util.post(this.api+'blog/editor.json',data,(res)=>{
                   if(res.success){
+                      this.blogId = res.data.blogId;
                       this.$message({
                           message: '保存成功',
                           type: 'success'
@@ -155,6 +155,8 @@
                   }else{
                       this.$message.error(res.msg || '出错了噢~');
                   }
+                  this.showTags();
+                  this.showCategory();
                   this.loading.close();
                 },this.getHeader())
 
@@ -163,7 +165,7 @@
               this.blogHtml = render;
             },
             showTags(){
-                util.get(this.api+"blog/tags.json",{},(res)=>{
+                util.get(this.api+"blog/tags.json",{blogId:this.blogId},(res)=>{
                     if(res.success){
                         this.tags = res.data.tags;
                         this.selectedTags = res.data.selectedTags;
@@ -171,9 +173,12 @@
                 },this.getHeader());
             },
             showCategory(){
-                util.get(this.api+"blog/category.json",{},(res)=>{
+                util.get(this.api+"blog/category.json",{blogId:this.blogId},(res)=>{
                     if(res.success){
                         this.categoryData = res.data.category;
+                        //设置选中
+                        this.$refs.tree.setCheckedKeys(res.data.selectCategory);
+
                     }
                 },this.getHeader());
                 util.get(this.api+"category.json",{},(rst)=>{
@@ -206,12 +211,24 @@
             getHeader() {
                 return this.$cookies.get("iblog_user_auth");
             },
+            getBlogId(){
+               let blog_id = util.getQueryVariable('blog');
+               if(blog_id){
+                   this.blogId = blog_id;
+               }
+            },
+            getBlogContent(){
+              util.get(this.api+'blog/content.json',{blogId:this.blogId},(res)=> {
+                  if(res.success){
+                      this.blogContent = res.data.blogContent;
+                      this.isShow = res.data.isShow;
+                      this.blogTitle = res.data.title;
+                  }
+              },this.getHeader())
+            },
             openFullScreen() {
                       this.loading = this.$loading({
                       lock: true,
-                      text: '正在保存中...',
-                      spinner: 'el-icon-loading',
-                      background: 'rgba(0, 0, 0, 0.7)'
                     });
                   }
         },
@@ -221,6 +238,8 @@
               }
         },
         created() {
+            this.getBlogId();
+            this.getBlogContent();
             this.showTags();
             this.showCategory();
         }
