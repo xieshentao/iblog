@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 export default{
-    get(url, data, cb, token){
+    get(url, data, cb, token = null){
        let g = {
             method: 'GET',
             url: url,
@@ -18,7 +18,7 @@ export default{
         }
         $.ajax(g);
     },
-    post(url, data = {}, cb,token) {
+    post(url, data = {}, cb,token = null) {
         let g = {
             method: 'post',
             url: url,

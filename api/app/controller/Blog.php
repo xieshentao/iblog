@@ -8,6 +8,30 @@ use think\facade\Db;
 
 class Blog extends IblogBase
 {
+
+    /**
+     * 查看blog 内容
+     */
+    public function viewBlog(){
+        //查看传入blog Name
+        $name = trim(input('name'));
+        $blog = Db::name('article')->where('title',$name)->where('display', 1)->find();
+
+        if(!$blog) return error('文章不存在!');
+
+
+        $data = [
+            'title' => $blog['title'],
+            'blogContent'=> $blog['html'],
+        ];
+
+        return success($data);
+
+    }
+
+
+
+
     /**
      * blog List
      * 20200910xst

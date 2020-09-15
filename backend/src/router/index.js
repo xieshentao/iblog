@@ -15,13 +15,22 @@ import AdminCount  from '../view/admin/Count.vue';
 import AdminPlan  from '../view/admin/Plan.vue';
 import AdminSetting from '../view/admin/Setting.vue';
 
+//前台
+import Index from '../view/index/Index';
+import Article from "../view/index/Article";
+
 Vue.use(Router);
 
 const routes = [
     {
       path: '/',
-      name: 'AdminIndex',
-      component: AdminIndex
+      name: 'Index',
+      component: Index
+    },
+    {
+      path: '/Article',
+      name: 'Article',
+      component: Article
     },
     {
       path:'/Login',

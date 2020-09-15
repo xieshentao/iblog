@@ -16,6 +16,7 @@
                 v-model="blogContent"
                 ref="md"
                 @change="dataChange"
+                :toolbars = "toolbars"
                 style="min-height: 800px"
               />
             </el-col>
