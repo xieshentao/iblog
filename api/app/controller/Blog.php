@@ -29,6 +29,55 @@ class Blog extends IblogBase
 
     }
 
+    public function showTags(){
+        //查看blog传入name
+        $title = input('name', '');
+        //标签
+        $tags = [];
+        $blog = Db::name('article')->where('title', $title)->where('display', 1)->find();
+
+        if ($blog) {
+            $tags = Db::name('articlemeta')->alias('a')
+                ->leftJoin('label l', 'l.id = a.target_id')
+                ->where('a.blog_id', $blog['id'])
+                ->where('a.type', 'label')
+                ->where('l.is_deleted', '<>', 1)
+                ->column('l.name');
+        }
+
+        return success(['tags' => $tags]);
+    }
+
+    public function showCategorys(){
+
+        //分类s
+        $category = [];
+
+        $parents = Db::name('category')->where('parent_id',0)->select();
+        $type = ['primary','success','warning','danger','info'];
+
+        $typeIndex = 0;
+        foreach ($parents as $parent){
+            $childs = Db::name('category')->where('parent_id',$parent['id'])->select();
+            if(count($childs) < 1) continue;
+
+            foreach ($childs as $child){
+                $tmp = [];
+                $tmp['id'] = $child['id'];
+                $tmp['name'] = $child['name'];
+                $tmp['parent'] = $parent['name'];
+                $tmp['type'] = $type[$typeIndex];
+                $category[] = $tmp;
+            }
+            $typeIndex ++;
+            if( $typeIndex >= count($type)){
+                $typeIndex = 0;
+            }
+        }
+
+        return success(['category' => $category]);
+    }
+
 
 
 

@@ -7,8 +7,18 @@
       <el-col :span="3">
         <LeftMenu></LeftMenu>
       </el-col>
-      <el-col :span="21">
-        <!--内容区域 -->
+      <el-col :span="21" class="main-content">
+        <el-calendar>
+          <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
+          <template
+            slot="dateCell"
+            slot-scope="{date, data}">
+            <p :class="data.isSelected ? 'is-selected' : ''">
+              {{ data.day.split('-').slice(1).join('-') }}
+            </p>
+            <p style="font-size: 10px;">你好{{ '✔️'}}</p>
+          </template>
+        </el-calendar>
       </el-col>
     </el-row>
   </div>
@@ -29,5 +39,8 @@
     }
 </script>
 
-<style>
+ <style>
+          .is-selected {
+            color: #1989FA;
+          }
 </style>

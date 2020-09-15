@@ -20,4 +20,7 @@ export default {
   .iconfont{
     margin-right: 10px !important;
   }
+  .main-content{
+    padding-left: 20px;
+  }
 </style>

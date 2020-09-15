@@ -10,9 +10,11 @@
         </div>
         <div class="index-main">
           <div class="category-block">
-            <el-badge value="php" class="item" style="user-select: none">
-             <span class="category">异常处理</span>
-            </el-badge>
+            <div v-for="category in categorys" style="margin: 30px;display: inline;">
+              <el-badge  :value="category.parent" class="item" :type="category.type" style="user-select: none">
+               <span class="category">{{category.name}}</span>
+              </el-badge>
+            </div>
           </div>
           <div class="main-block">
             <el-row>
@@ -23,15 +25,41 @@
                     v-model="articleContent"
                     ref="md"
                     @change="dataChange"
+                    @navigationToggle = "navigateChange"
                     :toolbars = "toolbars"
-                    subfield = 'false'
+                    :subfield = 'false'
                     defaultOpen = 'preview'
-                    editable="false"
-                    style="min-height: 800px"
+                    :editable = "false"
+                    :ishljs = "true"
+                    style="min-height: 800px;z-index: 888;"
                   />
                 </div>
               </el-col>
-              <el-col :span="4" class="operate-block"><div class="grid-content bg-purple-dark">222</div></el-col>
+              <el-col :span="4" class="operate-block" style="color:#FFFDEF;padding: 6px;">
+                <div style="text-align: center;">
+                   <el-image
+                        style="width: 70px; height: 70px;border-radius: 35px;"
+                        :src="url"
+                        fit="fill">
+                  </el-image>
+                  <div>aifly</div>
+                  <div style="font-size: 13px;color: #969896;">发布于2020-02-02</div>
+                </div>
+                <h3>分类</h3>
+                <div style="font-size: 13px;color: #969896;">
+                  <p>我去的撒旦das/dasddas>asddas</p>
+                  <p>我去的撒旦dasdasddas>dasddas></p>
+                  <p>我去的撒旦das/dasddas>dasddas></p>
+                </div>
+                <h3>标签</h3>
+                <el-tag type="info" v-for='tag in showTags' style="margin:0px 0px 5px 5px;user-select: none;">{{tag}}</el-tag>
+                <h3>相似文章</h3>
+                <div style="font-size: 13px;color: #969896;">
+                  <p>我去的撒旦das/dasddas>asddas</p>
+                  <p>我去的撒旦dasdasddas>dasddas></p>
+                  <p>我去的撒旦das/dasddas>dasddas></p>
+                </div>
+              </el-col>
             </el-row>
           </div>
         </div>
@@ -67,40 +95,12 @@
                 articleContent:'',
                 loading:true,
                 toolbars: {
-                    bold: false, // 粗体
-                    italic: false, // 斜体
-                    header: false, // 标题
-                    underline: false, // 下划线
-                    strikethrough: false, // 中划线
-                    mark: false, // 标记
-                    superscript: false, // 上角标
-                    subscript: false, // 下角标
-                    quote: false, // 引用
-                    ol: false, // 有序列表
-                    ul: false, // 无序列表
-                    link: false, // 链接
-                    imagelink: false, // 图片链接
-                    code: false, // code
-                    table: false, // 表格
-                    fullscreen: false, // 全屏编辑
                     readmodel: true, // 沉浸式阅读
-                    htmlcode: false, // 展示html源码
-                    help: false, // 帮助
-                    /* 1.3.5 */
-                    undo: false, // 上一步
-                    redo: false, // 下一步
-                    trash: false, // 清空
-                    save: false, // 保存（触发events中的save事件）
-                    /* 1.4.2 */
                     navigation: true, // 导航目录
-                    /* 2.1.8 */
-                    alignleft: false, // 左对齐
-                    aligncenter: false, // 居中
-                    alignright: false, // 右对齐
-                    /* 2.2.1 */
-                    subfield: true, // 单双栏模式
-                    preview: true, // 预览
-                }
+                },
+                showTags:[],
+                showCategory:[],
+                categorys:[],
 
             }
         },
@@ -155,9 +155,34 @@
                     this.loading = false;
                 });
             },
+            getShowTags(){
+              let name = 'test777';
+              util.get(this.api + '/blog/show_tags.json',{name:name},(res)=>{
+                  if(res.success){
+                      this.showTags = res.data.tags;
+
+                  }else{
+
+                  }
+
+              });
+            },
+            getCategorys(){
+              util.get(this.api + '/blog/show_categorys.json',{name:name},(res)=>{
+                  if(res.success){
+                      this.categorys = res.data.category;
+                  }else{
+
+                  }
+
+              });
+            },
             dataChange(value,render){
 
             },
+            navigateChange(status,value){
+              console.log(status,value)
+            }
         },
         computed: {
             ...mapState({
@@ -168,8 +193,10 @@
             this.showTitle();
         },
         created() {
+            this.getCategorys();
             this.setScreen();
             this.getContent();
+            this.getShowTags();
         }
     }
 </script>
@@ -195,7 +222,7 @@
     height: 60px;
     line-height: 60px;
     background: #393D49;
-    opacity: 0.7;
+    opacity: 0.9;
     user-select: none;
     z-index: 999;
   }
@@ -253,7 +280,7 @@
 
   .operate-block{
     background-color: #393D49;
-    opacity: 0.7;
+    opacity: 0.9;
     min-height: 400px;
   }
 
