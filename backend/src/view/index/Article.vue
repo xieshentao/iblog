@@ -1,17 +1,22 @@
 <template>
-  <div class="body">
+  <div class="body" style="background-image:url(../../../static/system/bk1.jpg); background-repeat:no-repeat; background-attachment:fixed;background-size:100%,100%">
     <template>
       <div class="main">
         <div class="nav">
-          <div class="logo" v-on:click="goIndex">
-            {{blogTitle}}
-            <span>{{titleDesc}}</span>
+          <div class="logo">
+            <div style="display: inline" v-on:click="goIndex">{{blogTitle}}
+              <span>{{titleDesc}}</span></div>
+            <el-input
+              placeholder="搜索"
+              prefix-icon="el-icon-search"
+              v-model="search" style="display: inline;float: right;width: 200px">
+            </el-input>
           </div>
         </div>
         <div class="index-main">
-          <div class="category-block">
-            <div v-for="category in categorys" style="margin: 30px;display: inline;">
-              <el-badge  :value="category.parent" class="item" :type="category.type" style="user-select: none">
+          <div class="category-block" style="display: flex;flex-wrap:wrap;">
+            <div v-for="category in categorys" class="category-item" style="margin: 10px 40px;">
+              <el-badge  :value="category.parent" class="item" :type="category.type" style="user-select: none;">
                <span class="category">{{category.name}}</span>
               </el-badge>
             </div>
@@ -39,11 +44,11 @@
                 <div style="text-align: center;">
                    <el-image
                         style="width: 70px; height: 70px;border-radius: 35px;"
-                        :src="url"
+                        :src="avatar"
                         fit="fill">
                   </el-image>
-                  <div>aifly</div>
-                  <div style="font-size: 13px;color: #969896;">发布于2020-02-02</div>
+                  <div>{{user}}</div>
+                  <div style="font-size: 13px;color: #969896;">发布于{{publishTime}}</div>
                 </div>
                 <h3>分类</h3>
                 <div style="font-size: 13px;color: #969896;">
@@ -52,7 +57,7 @@
                   <p>我去的撒旦das/dasddas>dasddas></p>
                 </div>
                 <h3>标签</h3>
-                <el-tag type="info" v-for='tag in showTags' style="margin:0px 0px 5px 5px;user-select: none;">{{tag}}</el-tag>
+                <el-tag type="info" v-for="(item,index) in showTags" :key="index" style="margin:0px 0px 5px 5px;user-select: none;">{{item}}</el-tag>
                 <h3>相似文章</h3>
                 <div style="font-size: 13px;color: #969896;">
                   <p>我去的撒旦das/dasddas>asddas</p>
@@ -62,6 +67,9 @@
               </el-col>
             </el-row>
           </div>
+        </div>
+        <div class="footer">
+
         </div>
       </div>
     </template>
@@ -93,6 +101,9 @@
                 height:'',
                 articleTitle:'',
                 articleContent:'',
+                user:'',
+                publishTime:'',
+                avatar:'',
                 loading:true,
                 toolbars: {
                     readmodel: true, // 沉浸式阅读
@@ -149,6 +160,9 @@
                     if(res.success){
                         this.articleTitle = res.data.title;
                         this.articleContent = res.data.blogContent;
+                        this.user = res.data.user;
+                        this.avatar = res.data.avatar;
+                        this.publishTime = res.data.publishTime;
                     }else{
                         this.articleTitle = res.data.msg;
                     }
@@ -166,6 +180,15 @@
                   }
 
               });
+            },
+            getShowCategory(){
+                util.get(this.api + '/blog/show_category.json',{name:name},(res)=>{
+                    if(res.success){
+                        this.showCategory = res.data.category;
+                    }else{
+
+                    }
+                });
             },
             getCategorys(){
               util.get(this.api + '/blog/show_categorys.json',{name:name},(res)=>{
@@ -193,10 +216,11 @@
             this.showTitle();
         },
         created() {
-            this.getCategorys();
             this.setScreen();
             this.getContent();
             this.getShowTags();
+            this.getCategorys();
+            this.getShowCategory();
         }
     }
 </script>
@@ -204,7 +228,7 @@
 <style>
   body{
     margin:0 !important;
-    background-image:url(../../../static/system/bk1.jpg); background-repeat:no-repeat; background-attachment:fixed;background-size:100%,100%
+
   }
 
   .main{
@@ -226,7 +250,6 @@
     user-select: none;
     z-index: 999;
   }
-
   .logo{
     font-weight: bold;
     font-size: 30px;
@@ -253,7 +276,7 @@
   }
 
   .category-block{
-    width: 1280px;
+    width: 1300px;
     margin: 0 auto;
     padding: 10px 0 20px 0;
     border-radius: 1px;
@@ -282,6 +305,10 @@
     background-color: #393D49;
     opacity: 0.9;
     min-height: 400px;
+  }
+
+  .footer{
+   height: 300px;
   }
 
 

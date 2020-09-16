@@ -1,47 +1,63 @@
+<head>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+</head>
 <template>
-    <div class="body">
-      <template>
-        <el-carousel indicator-position="none"
-                     v-bind:height="height"
-                     interval='7000' >
-          <el-carousel-item v-for="item in imageSrc" :key="item">
-            <img v-bind:src="item" height="100%" width="100%"/></el-carousel-item>
-        </el-carousel>
-        <div class="main">
-          <div class="nav">
-                <div class="logo" v-on:click="goIndex">
-                  {{blogTitle}}
-                  <span>{{titleDesc}}</span>
-                </div>
+  <div  v-bind:style="{height:height + 'px'}" class="body" style="background-image:url(../../../static/system/bk1.jpg); background-repeat:no-repeat; background-attachment:fixed;background-size:100%,100%">
+    <template>
+      <div class="main">
+        <div class="nav">
+          <div class="logo">
+            <div style="display: inline" v-on:click="goIndex">{{blogTitle}}
+              <span>{{titleDesc}}</span></div>
+            <el-input
+              placeholder="搜索"
+              prefix-icon="el-icon-search"
+              v-model="search" style="display: inline;float: right;width: 200px">
+            </el-input>
           </div>
-          <div class="index-main">
-            <div class="search">
-              <el-input
-                placeholder="搜索"
-                v-model="search"
-                style="width: 500px;font-size: 17px"
-              >
-                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-              </el-input>
+        </div>
+        <div class="index-main">
+          <div class="category-block" style="display: flex;flex-wrap:wrap;">
+            <div v-for="category in categorys" class="category-item" style="margin: 10px 40px;">
+              <el-badge  :value="category.parent" class="item" :type="category.type" style="user-select: none;">
+                <span class="category">{{category.name}}</span>
+              </el-badge>
             </div>
-            <div class="cate">
-              <div class="category">
-                <h3>分类</h3>
-                大苏打 萨达大苏打
-              </div>
+          </div>
+          <div class="main-block" style="background-color: #333333">
+            <div style="width: 401px;height: 200px;background-color: white;margin:16px">
+              1
             </div>
-            <div class="show-Article">
-              <el-button v-on:click="goArticle">所有文章</el-button>
+            <div style="width: 401px;height: 200px;background-color: white;margin:16px">
+              1
+            </div>
+            <div style="width: 401px;height: 200px;background-color: white;margin:16px">
+              1
             </div>
           </div>
         </div>
-      </template>
-    </div>
+        <div class="footer">
+
+        </div>
+      </div>
+    </template>
+  </div>
 </template>
 
 <script>
+
+    import {mapState} from "vuex";
+    import util from "@/util";
+    import { mavonEditor } from 'mavon-editor'
+    import 'mavon-editor/dist/css/index.css'
     export default {
         name: "index",
+        components: {
+            mavonEditor,
+        },
         data(){
             return{
                 imageSrc:[
@@ -54,53 +70,128 @@
                 titleDesc:'',
                 search:'',
                 height:'',
+                articleTitle:'',
+                articleContent:'',
+                user:'',
+                publishTime:'',
+                avatar:'',
+                loading:true,
+                toolbars: {
+                    readmodel: true, // 沉浸式阅读
+                    navigation: true, // 导航目录
+                },
+                showTags:[],
+                showCategory:[],
+                categorys:[],
+
             }
         },
         methods:{
-          showDesc(){
-              let title = this.title2;
-              let index = 0;
-              let length = title.length;
-              let tid = '';
-              this.show = true;
-              tid = setInterval(()=>{
-                  this.titleDesc += title.charAt(index);
-                  if(index ++ == length){
-                      clearInterval(tid);
-                  }
-              },180);
-          },
-          showTitle(){
-              let title = this.title;
-              let index = 0;
-              let length = title.length;
-              let tid = '';
-              this.show = true;
-              tid = setInterval(()=>{
-                  this.blogTitle += title.charAt(index);
-                  if(index ++ == length){
-                      clearInterval(tid);
-                      this.showDesc();
-                  }
-              },250);
+            showDesc(){
+                let title = this.title2;
+                let index = 0;
+                let length = title.length;
+                let tid = '';
+                this.show = true;
+                tid = setInterval(()=>{
+                    this.titleDesc += title.charAt(index);
+                    if(index ++ == length){
+                        clearInterval(tid);
+                    }
+                },180);
+            },
+            showTitle(){
+                let title = this.title;
+                let index = 0;
+                let length = title.length;
+                let tid = '';
+                this.show = true;
+                tid = setInterval(()=>{
+                    this.blogTitle += title.charAt(index);
+                    if(index ++ == length){
+                        clearInterval(tid);
+                        this.showDesc();
+                    }
+                },250);
 
-          },
-          setScreen(){
-              let height = document.documentElement.clientHeight;
-              this.height = height+'px';
-          },
-          goIndex(){
-            location.href = '/';
-          },
-          goArticle(){
-            location.href = '/Article';
-          }
+            },
+            setScreen(){
+                let height = document.documentElement.clientHeight;
+                this.height = height;
+            },
+            goIndex(){
+                location.href = '/';
+            },
+            goArticle(){
+                location.href = '/Article';
+            },
+            getContent(){
+                let name = 'test777';
+                util.get(this.api + '/blog/view.json',{name:name},(res)=>{
+                    if(res.success){
+                        this.articleTitle = res.data.title;
+                        this.articleContent = res.data.blogContent;
+                        this.user = res.data.user;
+                        this.avatar = res.data.avatar;
+                        this.publishTime = res.data.publishTime;
+                    }else{
+                        this.articleTitle = res.data.msg;
+                    }
+                    this.loading = false;
+                });
+            },
+            getShowTags(){
+                let name = 'test777';
+                util.get(this.api + '/blog/show_tags.json',{name:name},(res)=>{
+                    if(res.success){
+                        this.showTags = res.data.tags;
+
+                    }else{
+
+                    }
+
+                });
+            },
+            getShowCategory(){
+                util.get(this.api + '/blog/show_category.json',{name:name},(res)=>{
+                    if(res.success){
+                        this.showCategory = res.data.category;
+                    }else{
+
+                    }
+                });
+            },
+            getCategorys(){
+                util.get(this.api + '/blog/show_categorys.json',{name:name},(res)=>{
+                    if(res.success){
+                        this.categorys = res.data.category;
+                    }else{
+
+                    }
+
+                });
+            },
+            dataChange(value,render){
+
+            },
+            navigateChange(status,value){
+                console.log(status,value)
+            }
+        },
+        computed: {
+            ...mapState({
+                api: state => state.api,
+            })
         },
         mounted(){
-          this.showTitle();
+            this.showTitle();
         },
         created() {
-          this.setScreen();
+            this.setScreen();
+            this.getContent();
+            this.getShowTags();
+            this.getCategorys();
+            this.getShowCategory();
         }
     }
 </script>
@@ -108,30 +199,28 @@
 <style>
   body{
     margin:0 !important;
+
   }
 
   .main{
-    position: fixed;
-    top:0px;
-    left: 0px;
-    z-index: 999;
+    z-index: 888;
     width: 100%;
-    height: 1098px;
+    min-height: 600px;
     overflow: auto;
     color: white;
   }
 
   .nav{
-    position: absolute;
+    position: fixed;
     top:30px;
     width: 100%;
     height: 60px;
     line-height: 60px;
     background: #393D49;
-    opacity: 0.5;
+    opacity: 0.9;
     user-select: none;
+    z-index: 999;
   }
-
   .logo{
     font-weight: bold;
     font-size: 30px;
@@ -147,38 +236,55 @@
   .menu{
     float: right;
     font-size: 15px;
+    margin-right: 100px;
     display: inline;
   }
 
   .index-main{
-    width: 1200px;
-    min-height: 600px;
-    position: absolute;
-    top:130px;
-    background: #393D49;
-    left:50%;
-    transform: translateX(-50%);
-    opacity: 0.7;
-    padding: 50px;
-    overflow: auto;
+    width: 100%;
+    margin-top: 100px;
+    color: #333333;
   }
 
-  .search{
-    position: absolute;
-    left:50%;
-    transform: translateX(-50%);
+  .category-block{
+    width: 1300px;
+    margin: 0 auto;
+    padding: 10px 0 20px 0;
+    border-radius: 1px;
   }
 
-  .cate{
-    position: absolute;
-    top:170px;
-    margin: 0px 30px;
-    height: 470px;
-    width: 800px;
-    overflow: auto;
-    left:50%;
-    transform: translateX(-50%);
+  .content-block{
+    background-color:#fff;
+    padding: 20px 5px;
   }
+
+  .main-block{
+    width: 1300px;
+    margin: 0 auto;
+    min-height: 400px;
+    border-radius: 1px;
+    font-family: 'Fira Sans';
+    display: flex;
+    flex-wrap:wrap;
+
+  }
+
+  .category{
+    color: #FFFFFF;
+    user-select: none;
+    font-family: 'Fira Sans';
+  }
+
+  .operate-block{
+    background-color: #393D49;
+    opacity: 0.9;
+    min-height: 400px;
+  }
+
+  .footer{
+    height: 300px;
+  }
+
 
   .show-Article{
     position: absolute;

@@ -34,6 +34,7 @@ Route::rule('blog/content', 'blog/blogContent','options|get')->ext('json');
 Route::rule('blog/view', 'blog/viewBlog','options|get')->ext('json');
 Route::rule('blog/show_tags', 'blog/showTags','options|get')->ext('json');
 Route::rule('blog/show_categorys', 'blog/showCategorys','options|get')->ext('json');
+Route::rule('blog/show_category', 'blog/showCategory','options|get')->ext('json');
 //Route::rule('blog/:name', 'blog/blog','options|get')->ext('json');
 //Route::rule('category_remove', 'category/remove','options|post')->ext('json');
 

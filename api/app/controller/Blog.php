@@ -18,15 +18,17 @@ class Blog extends IblogBase
         $blog = Db::name('article')->where('title',$name)->where('display', 1)->find();
 
         if(!$blog) return error('文章不存在!');
-
+        $user = Db::name('users')->where('status',1)->where('id',$blog['user_id'])->find();
 
         $data = [
             'title' => $blog['title'],
             'blogContent'=> $blog['html'],
+            'publishTime'=> $blog['publish_time'],
+            'user'=> $user['name'] ?:'',
+            'avatar'=> $user['avatar'] ? UPLOAD_SITE_PATH.$user['avatar'] :'',
         ];
 
         return success($data);
-
     }
 
     public function showTags(){
@@ -47,6 +49,26 @@ class Blog extends IblogBase
 
         return success(['tags' => $tags]);
     }
+
+
+    public function showCategory(){
+        //查看blog传入name
+        $title = input('name', '');
+        //标签
+        $category = [];
+        $blog = Db::name('article')->where('title', $title)->where('display', 1)->find();
+
+        if ($blog) {
+            $category = Db::name('articlemeta')->alias('a')
+                ->leftJoin('category c', 'c.id = a.target_id')
+                ->where('a.blog_id', $blog['id'])
+                ->where('a.type', 'category')
+                ->column('c.name,c.id');
+        }
+
+        return success(['category' => $category]);
+    }
+
 
     public function showCategorys(){
 
@@ -74,6 +96,8 @@ class Blog extends IblogBase
                 $typeIndex = 0;
             }
         }
+
+        array_push($category,['id'=>-1,'name'=>'未分类']);
 
         return success(['category' => $category]);
     }
