@@ -203,9 +203,36 @@
             dataChange(value,render){
 
             },
+
+            //设置标题跳转锚
             navigateChange(status,value){
-              console.log(status,value)
-            }
+               if(status){
+                   this.$nextTick(() => {
+                       let elements = document.getElementsByClassName("v-note-navigation-content")[0];
+                       let children = elements.children;
+
+                       for(let i=0;i<children.length;i++){
+                           let aTags = children[i].getElementsByTagName('a')[0];
+                           if(aTags){
+                               children[i].addEventListener("click",function(){
+                                   location.href = '#'+aTags.id;
+                                   window.scrollTo(window.scrollX,window.scrollY - 100);
+                               });
+                           }
+                       }
+                   });
+               }
+            },
+            setFrame(){
+                var scrollFunc = function(e){
+                    e=e || window.event;
+                    console.log(1111);
+                }
+                if(document.addEventListener){
+                    document.addEventListener('onscroll',scrollFunc,false);//火狐
+                }//W3C
+                window.onmousewheel=document.onmousewheel=scrollFunc;//IE/Opera/Chrome
+            },
         },
         computed: {
             ...mapState({
@@ -216,11 +243,14 @@
             this.showTitle();
         },
         created() {
+            //设置 标题区域，其他信息区域 位置
+            this.setFrame();
             this.setScreen();
             this.getContent();
             this.getShowTags();
             this.getCategorys();
             this.getShowCategory();
+
         }
     }
 </script>
@@ -310,7 +340,30 @@
   .footer{
    height: 300px;
   }
+  /*编辑器样式修改*/
 
+  .v-note-op{
+    position: absolute !important;
+    top:0px;
+    left:0px;
+    width: 248px !important;
+    background-color: rgb(251, 251, 251) !important;
+    border: none !important;
+  }
+
+  .v-note-navigation-wrapper{
+    position: absolute !important;
+    top:0px !important;
+    left:0px;
+    width: 248px !important;
+    background-color: rgb(251, 251, 251) !important;
+    border: none !important;
+  }
+
+  .v-show-content{
+    width: 824px !important;
+    float: right !important;
+  }
 
   .show-Article{
     position: absolute;
