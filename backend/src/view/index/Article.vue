@@ -155,7 +155,7 @@
                 location.href = '/Article';
             },
             getContent(){
-                let name = 'test777';
+                let name = this.articleTitle;
                 util.get(this.api + '/blog/view.json',{name:name},(res)=>{
                     if(res.success){
                         this.articleTitle = res.data.title;
@@ -170,7 +170,7 @@
                 });
             },
             getShowTags(){
-              let name = 'test777';
+              let name = this.articleTitle;
               util.get(this.api + '/blog/show_tags.json',{name:name},(res)=>{
                   if(res.success){
                       this.showTags = res.data.tags;
@@ -243,6 +243,8 @@
             this.showTitle();
         },
         created() {
+            //设置标题名
+            this.articleTitle = decodeURI(util.getQueryVariable('name'));
             //设置 标题区域，其他信息区域 位置
             this.setFrame();
             this.setScreen();

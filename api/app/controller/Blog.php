@@ -31,6 +31,7 @@ class Blog extends IblogBase
         return success($data);
     }
 
+
     public function showTags(){
         //查看blog传入name
         $title = input('name', '');
@@ -103,17 +104,23 @@ class Blog extends IblogBase
     }
 
 
-
-
     /**
      * blog List
      * 20200910xst
      */
-    public function blogList(){
+    public function showList(){
+
+        $category_id = input('category');
+
+        $list = Db::name('article')->alias('a')->column('a.title,a.html');
+
+        return success($list);
         
     }
 
-
+    /**
+     * ---------------------------后台博客相关-------------------------------------------------------------
+     */
 
 
     /**
@@ -134,6 +141,10 @@ class Blog extends IblogBase
 
         return success($data);
     }
+
+
+
+
 
     /**
      * 新增|编辑博客

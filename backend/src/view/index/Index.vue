@@ -5,7 +5,7 @@
   />
 </head>
 <template>
-  <div  v-bind:style="{height:height + 'px'}" class="body" style="background-image:url(../../../static/system/bk1.jpg); background-repeat:no-repeat; background-attachment:fixed;background-size:100%,100%">
+  <div  v-bind:style="{'min-height':height + 'px'}" class="body" style="background-image:url(../../../static/system/bk1.jpg); background-repeat:no-repeat; background-attachment:fixed;background-size:100%,100%">
     <template>
       <div class="main">
         <div class="nav">
@@ -27,15 +27,20 @@
               </el-badge>
             </div>
           </div>
-          <div class="main-block" style="background-color: #333333">
-            <div style="width: 401px;height: 200px;background-color: white;margin:16px">
-              1
-            </div>
-            <div style="width: 401px;height: 200px;background-color: white;margin:16px">
-              1
-            </div>
-            <div style="width: 401px;height: 200px;background-color: white;margin:16px">
-              1
+          <div class="main-block" style="background-color: rgba(51,54,51,0.8)">
+            <div v-for="(item,index) in blogList" style="width: 47%;height: 220px;background-color: white;margin:16px">
+              <el-row style="height: 100%">
+                <el-col :span="7" v-bind:style="{'text-align':'center','background-color':getColor(),'height':'100%','display':'block','padding':'0 10px'}">
+                  {{item.title}}
+                </el-col>
+                <el-col :span="17" >
+                  <div style="overflow: hidden;max-height: 100px;text-align: center">
+                    <el-link v-bind:href="'/Article?name=' + item.title" target="_blank" :underline="false" ><h1>{{item.title}}</h1></el-link>
+                  </div>
+                  <el-row v-html="item.html" style="overflow: hidden;display: block;border-top: 1px solid #e6e6e6;font-size: 12px;max-height: 120px;padding: 5px">
+                  </el-row>
+                </el-col>
+              </el-row>
             </div>
           </div>
         </div>
@@ -53,6 +58,7 @@
     import util from "@/util";
     import { mavonEditor } from 'mavon-editor'
     import 'mavon-editor/dist/css/index.css'
+
     export default {
         name: "index",
         components: {
@@ -64,6 +70,7 @@
                     '../../../static/system/bk1.jpg',
                     '../../../static/system/bk2.jpg',
                 ],
+                color:['#66FFFF','#FF9966','#2E8B57','#99CCCC','#FFCC99','#99CC99'],
                 title:'Iblog',
                 title2:'记录每一天',
                 blogTitle:'',
@@ -83,6 +90,7 @@
                 showTags:[],
                 showCategory:[],
                 categorys:[],
+                blogList:[],
 
             }
         },
@@ -176,12 +184,28 @@
             },
             navigateChange(status,value){
                 console.log(status,value)
+            },
+            getBlogList(){
+                util.get(this.api + '/blog/show_list.json',{name:name},(res)=>{
+                    if(res.success){
+                        this.blogList = res.data;
+                    }else{
+
+                    }
+
+                });
+            },
+            getColor:function(){
+                let index = util.randomNum(0,this.color.length - 1);
+                let color = this.color[index];
+                return color;
             }
+
         },
         computed: {
             ...mapState({
                 api: state => state.api,
-            })
+            }),
         },
         mounted(){
             this.showTitle();
@@ -192,6 +216,7 @@
             this.getShowTags();
             this.getCategorys();
             this.getShowCategory();
+            this.getBlogList();
         }
     }
 </script>
@@ -266,6 +291,7 @@
     font-family: 'Fira Sans';
     display: flex;
     flex-wrap:wrap;
+    justify-content: space-around;
 
   }
 
