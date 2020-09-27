@@ -15,6 +15,7 @@ class Blog extends IblogBase
     public function viewBlog(){
         //查看传入blog Name
         $name = trim(input('name'));
+
         $blog = Db::name('article')->where('title',$name)->where('display', 1)->find();
 
         if(!$blog) return error('文章不存在!');
@@ -134,8 +135,8 @@ class Blog extends IblogBase
         $blog = Db::name('article')->where('id', $blogId)->where('user_id', $user['id'])->find();
 
         $data = [
-            'title' => $blog['title'],
-            'blogContent'=> $blog['markdown'],
+            'title' => $blog['title'] ?:'',
+            'blogContent'=> $blog['markdown']?:'',
             'isShow'=> !isset($blog['display']) || $blog['display'] == 1 ? true :false,
         ];
 

@@ -112,7 +112,6 @@
                 showTags:[],
                 showCategory:[],
                 categorys:[],
-
             }
         },
         methods:{
