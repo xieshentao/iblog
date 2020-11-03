@@ -71,6 +71,8 @@
         <div class="footer">
 
         </div>
+        <img src="../../../static/system/haimian.gif" style="position: fixed;bottom: 10px;width: 100px;height: auto">
+        <img src="../../../static/system/paidaxin.gif" style="position: fixed;bottom: 10px;right:0px;width: 100px;height: auto">
       </div>
     </template>
   </div>
@@ -97,11 +99,10 @@
                     minHeight:"",
                 },
                 imageSrc:[
-                    '../../../static/system/bk1.jpg',
-                    '../../../static/system/bk2.jpg',
-                    '../../../static/system/bk3.jpg',
-                    '../../../static/system/bk4.jpg',
                     '../../../static/system/bk5.jpg',
+                    '../../../static/system/bk8.jpg',
+                    '../../../static/system/bk9.jpg',
+                    '../../../static/system/bk10.jpg',
                 ],
                 title:'Iblog',
                 title2:'记录每一天',

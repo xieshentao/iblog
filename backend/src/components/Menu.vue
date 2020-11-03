@@ -8,12 +8,14 @@
       @open="handleOpen"
       @close="handleClose"
       :router="true"
+      :unique-opened="true"
+      :default-openeds="openSubMenu"
       >
       <el-menu-item index="admin">
         <i class="iconfont iconkongzhitai"></i>
         <span slot="title">控制台</span>
       </el-menu-item>
-      <el-submenu index="">
+      <el-submenu index="blog" >
         <template slot="title">
           <i class="iconfont iconblog"></i>
           <span>blog</span>
@@ -57,7 +59,8 @@
   export default {
     data(){
       return {
-        selected:"admin"
+        selected:"admin",
+        openSubMenu:'',
       };
     },
     methods: {
@@ -74,6 +77,9 @@
         const selectedName = pathname.substr(1);
         if(selectedName == null) return;
 
+        if(selectedName == 'adminBlogAdd' || selectedName == 'adminBlogList' || selectedName == "adminBlogRecycle"){
+            this.openSubMenu = "blog";
+        }
         this.selected = selectedName;
       },
         //消息通知
