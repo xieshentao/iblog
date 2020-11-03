@@ -40,5 +40,5 @@ Route::rule('blog/show_list', 'blog/showList','options|get')->ext('json');
 //Route::rule('category_remove', 'category/remove','options|post')->ext('json');
 
 
-Route::rule('upload', 'upload/upload','options|post');
+Route::rule('uploadBase64', 'upload/uploadBase64','options|post');
 

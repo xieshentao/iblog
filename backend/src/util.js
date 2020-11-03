@@ -35,15 +35,13 @@ export default {
     }
     $.ajax(g);
   },
-  upload(url, data = {}, cb, token = null) {
+  uploadBase64(url, data = {}, cb, token = null) {
     let g = {
       method: 'post',
       url: url,
       data: data,
       crossDomain: true,
       dataType: 'json',
-      contentType: 'multipart/form-data',
-      processData: false,  // 增加这一行，不处理参数
       success: (data) => cb(data),
       error: (data) => cb(data)
     };

@@ -1,5 +1,5 @@
 <template>
-  <div class="body" style="background-image:url(../../../static/system/bk1.jpg); background-repeat:no-repeat; background-attachment:fixed;background-size:100%,100%">
+  <div class="body" v-bind:style="backgroundStyle">
     <template>
       <div class="main">
         <div class="nav">
@@ -89,9 +89,19 @@
         },
         data(){
             return{
+                backgroundStyle:{
+                    backgroundImage:"url(../../../static/system/bk1.jpg)",
+                    backgroundRepeat:"no-repeat",
+                    backgroundAttachment:"fixed",
+                    backgroundSize:"100%,100%",
+                    minHeight:"",
+                },
                 imageSrc:[
                     '../../../static/system/bk1.jpg',
                     '../../../static/system/bk2.jpg',
+                    '../../../static/system/bk3.jpg',
+                    '../../../static/system/bk4.jpg',
+                    '../../../static/system/bk5.jpg',
                 ],
                 title:'Iblog',
                 title2:'记录每一天',
@@ -232,6 +242,11 @@
                 }//W3C
                 window.onmousewheel=document.onmousewheel=scrollFunc;//IE/Opera/Chrome
             },
+            setBackground:function () {
+                this.backgroundStyle.minHeight = this.height+"px";
+                let index = util.randomNum(0,this.imageSrc.length - 1)
+                this.backgroundStyle.backgroundImage = "url("+this.imageSrc[index]+")"
+            },
         },
         computed: {
             ...mapState({
@@ -247,6 +262,7 @@
             //设置 标题区域，其他信息区域 位置
             this.setFrame();
             this.setScreen();
+            this.setBackground();
             this.getContent();
             this.getShowTags();
             this.getCategorys();

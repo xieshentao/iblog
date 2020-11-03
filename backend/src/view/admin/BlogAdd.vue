@@ -241,12 +241,12 @@
                 });
             },
             $imgAdd(pos,$file){
-                let formdata = new FormData();
-                formdata.append('image', $file);
-                util.upload(this.api+"upload",formdata,function(res){
+                console.log($file.miniurl);
+                util.uploadBase64(this.api+"uploadBase64",{image:$file.miniurl},(res)=>{
                     //替换url
                     if(res.success){
-                        $vm.$img2Url(pos, res.data.url);
+                        console.log(res.data.url);
+                        this.$refs.md.$img2Url(pos, res.data.url);
                     }
                 },this.getHeader());
             },

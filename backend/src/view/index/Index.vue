@@ -5,7 +5,7 @@
   />
 </head>
 <template>
-  <div  v-bind:style="{'min-height':height + 'px'}" class="body" style="background-image:url(../../../static/system/bk1.jpg); background-repeat:no-repeat; background-attachment:fixed;background-size:100%,100%">
+  <div   class="body" v-bind:style="backgroundStyle">
     <template>
       <div class="main">
         <div class="nav">
@@ -66,9 +66,19 @@
         },
         data(){
             return{
+                backgroundStyle:{
+                    backgroundImage:"url(../../../static/system/bk1.jpg)",
+                    backgroundRepeat:"no-repeat",
+                    backgroundAttachment:"fixed",
+                    backgroundSize:"100%,100%",
+                    minHeight:"",
+                },
                 imageSrc:[
                     '../../../static/system/bk1.jpg',
                     '../../../static/system/bk2.jpg',
+                    '../../../static/system/bk3.jpg',
+                    '../../../static/system/bk4.jpg',
+                    '../../../static/system/bk5.jpg',
                 ],
                 color:['#66FFFF','#FF9966','#2E8B57','#99CCCC','#FFCC99','#99CC99'],
                 title:'Iblog',
@@ -199,7 +209,12 @@
                 let index = util.randomNum(0,this.color.length - 1);
                 let color = this.color[index];
                 return color;
-            }
+            },
+            setBackground:function () {
+                this.backgroundStyle.minHeight = this.height+"px";
+                let index = util.randomNum(0,this.imageSrc.length - 1)
+                this.backgroundStyle.backgroundImage = "url("+this.imageSrc[index]+")"
+            },
 
         },
         computed: {
@@ -212,6 +227,7 @@
         },
         created() {
             this.setScreen();
+            this.setBackground();
             this.getContent();
             this.getShowTags();
             this.getCategorys();

@@ -1,7 +1,14 @@
 <?php
 //常量定义
-define('UPLOAD_PATH','');
-define('UPLOAD_SITE_PATH','');
+define('DS',DIRECTORY_SEPARATOR);
+define('ROOT',dirname(dirname(__FILE__)).DS);   //api根目录
+define('UPLOAD_PATH',ROOT."public".DS."static".DS);   //文件上传目录
+define('UPLOAD_SITE_URL',"http://iblog.localhost/static/"); //文件预览目录
+
+
+
+
+
 
 
 
