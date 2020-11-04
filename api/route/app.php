@@ -25,11 +25,13 @@ Route::rule('category', 'category/index','options|get')->ext('json');
 Route::rule('category_add', 'category/add','options|post')->ext('json');
 Route::rule('category_remove', 'category/remove','options|post')->ext('json');
 
-Route::rule('blog/list', 'blog/index','options|get')->ext('json');
+//Route::rule('blog/list', 'blog/index','options|get')->ext('json');
 Route::rule('blog/tags', 'blog/blogTags','options|get')->ext('json');
 Route::rule('blog/category', 'blog/blogCategory','options|get')->ext('json');
 Route::rule('blog/editor', 'blog/blogEditor','options|post')->ext('json');
 Route::rule('blog/content', 'blog/blogContent','options|get')->ext('json');
+Route::rule('blog/list', 'blog/blogList','options|get')->ext('json');
+
 
 Route::rule('blog/view', 'blog/viewBlog','options|get')->ext('json');
 Route::rule('blog/show_tags', 'blog/showTags','options|get')->ext('json');

@@ -123,6 +123,101 @@ class Blog extends IblogBase
      * ---------------------------后台博客相关-------------------------------------------------------------
      */
 
+    /**
+     * 后台博客列表
+     *
+     * return blogList category users
+     */
+    public function blogList(){
+        $user = Users::getUser();
+
+        $page = input('page',1);
+        $limit = input('limit',10);
+        $query = input('query');
+        $category = input('category');
+        $selectedUser = input('user');
+
+        $start = ($page-1)*$limit;
+
+        $blogSql = Db::name('article')->alias('a');
+        $blogSql->leftJoin('articlemeta at',"at.type = 'category' AND at.blog_id = a.id");
+        $blogSql->leftJoin('category c',"c.id = at.target_id");
+        $blogSql->leftJoin('users u',"u.id = a.user_id");
+
+        if($category){
+            $blogSql->where("c.id",$category);
+        }
+
+        if($query){
+            $blogSql->where("a.title","like","%$query%");
+        }
+
+        if($selectedUser){
+            $blogSql->where("a.user_id",$selectedUser);
+        }
+        $blogSql->where('a.is_deleted',0)->group('a.id');
+
+        $total = $blogSql->count('a.id');
+
+        $blogList = $blogSql->order('a.modifyd_time','desc')->limit($start,$limit)->column("a.id,a.title,u.name,a.display,a.is_push,a.modifyd_time");
+
+        foreach ($blogList as $index=>$item){
+            //分类
+            $tmpCategory = Db::name('category')->alias('c')
+                ->leftJoin('articlemeta at',"at.target_id = c.id")
+                ->where('at.type','category')
+                ->where('at.blog_id',$item['id'])->column('c.name');
+            //标签
+            $tmpLabel = Db::name('label')->alias('l')
+                ->leftJoin('articlemeta at',"at.target_id = l.id")
+                ->where('at.type','label')
+                ->where('at.blog_id',$item['id'])->column('l.name');
+
+            $blogList[$index]['category'] = $tmpCategory;
+            $blogList[$index]['label'] = $tmpLabel;
+        }
+
+        //分类数据
+        $category = Db::name('category')->select();
+        $categoryData = [];
+
+        foreach ($category as $item) {
+            if ($item['parent_id'] == 0) {
+                $categoryData[$item['id']]['value'] = $item['id'];
+                $categoryData[$item['id']]['label'] = $item['name'];
+            } else {
+                $tmp = [];
+                $tmp['value'] = $item['id'];
+                $tmp['label'] = $item['name'];
+                $categoryData[$item['parent_id']]['children'][] = $tmp;
+            }
+        }
+        $categoryData = array_values($categoryData);
+        $categoryData[] = ['id' => -1, 'label' => '未分类'];
+
+
+        //用户数据
+        $userList = [];
+        if($user['role'] == 'stuff'){
+            $userList[0]['name'] = $user['name'];
+            $userList[0]['id'] = $user['id'];
+        }else if($user['role'] == 'boss'){
+            $userList = Db::name('users')->column("name,id");
+        }
+
+        $data = [
+            'category'=>$categoryData,
+            'userList'=>$userList,
+            'blogList'=>$blogList,
+            'total'   =>$total,
+        ];
+
+        return success($data);
+
+    }
+
+
+
 
     /**
      * blog Content
@@ -142,10 +237,6 @@ class Blog extends IblogBase
 
         return success($data);
     }
-
-
-
-
 
     /**
      * 新增|编辑博客
