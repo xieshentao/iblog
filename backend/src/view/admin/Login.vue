@@ -35,7 +35,7 @@
                             message: '登陆成功！',
                             type: 'success'
                         });
-                        location.href = '/';
+                        location.href = '/admin';
                     }else{
                         this.$message.error(rst.msg || '出错了~');
                     }

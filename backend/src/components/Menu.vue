@@ -8,7 +8,6 @@
       @open="handleOpen"
       @close="handleClose"
       :router="true"
-      :unique-opened="true"
       :default-openeds="openSubMenu"
       >
       <el-menu-item index="admin">
@@ -60,7 +59,7 @@
     data(){
       return {
         selected:"admin",
-        openSubMenu:'',
+        openSubMenu:[],
       };
     },
     methods: {
@@ -78,7 +77,7 @@
         if(selectedName == null) return;
 
         if(selectedName == 'adminBlogAdd' || selectedName == 'adminBlogList' || selectedName == "adminBlogRecycle"){
-            this.openSubMenu = "blog";
+            this.openSubMenu = ['blog'];
         }
         this.selected = selectedName;
       },

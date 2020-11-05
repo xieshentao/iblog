@@ -55,12 +55,18 @@ class Auth
         $email = $check['data']->email;
         $user = Users::Where('email',$email)->find();
         if(!$user){
-            $request->authStatusCode = 1001;
+            $request->authStatusCode = 1001;  //账户不存在
             return $next($request);
         }
 
         if($user->status != 1){
-            $request->authStatusCode = 1005;
+            $request->authStatusCode = 1005;   //用户已被禁用
+            return $next($request);
+        }
+
+        //权限认证 boss OR stuff
+        if($user['role'] == 'stuff' && in_array($rule,$authConfig['needBoss'])){
+            $request->authStatusCode = 1003;   //权限不住
             return $next($request);
         }
 

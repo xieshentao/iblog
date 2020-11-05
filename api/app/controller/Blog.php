@@ -26,7 +26,7 @@ class Blog extends IblogBase
             'blogContent'=> $blog['html'],
             'publishTime'=> $blog['publish_time'],
             'user'=> $user['name'] ?:'',
-            'avatar'=> $user['avatar'] ? UPLOAD_SITE_PATH.$user['avatar'] :'',
+            'avatar'=> $user['avatar'] ? UPLOAD_SITE_URL.$user['avatar'] :'',
         ];
 
         return success($data);

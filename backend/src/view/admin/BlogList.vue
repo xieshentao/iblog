@@ -30,7 +30,7 @@
                   <el-tag
                     v-for="item in scope.row.category"
                     :key="item"
-                    :type="info"
+                    type="info"
                     effect="plain">
                     {{ item }}
                   </el-tag>
@@ -100,8 +100,8 @@
           limit:10,
           categoryList:[],
           userList:[],
-          total:'',
-          searchLoading:'false',
+          total:0,
+          searchLoading:false,
       }
     },
     methods:{

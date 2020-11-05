@@ -74,7 +74,8 @@
         form:{
           title:'标题',
           content:'  ',
-        }
+        },
+        tableData:[],
       }
     }
   }
