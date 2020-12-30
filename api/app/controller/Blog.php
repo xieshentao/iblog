@@ -112,10 +112,33 @@ class Blog extends IblogBase
     public function showList(){
 
         $category_id = input('category');
+        $page = input('page',1);
+        $limit = 10;
+        $start = ($page-1)*$limit;
 
-        $list = Db::name('article')->alias('a')->column('a.title,a.html');
 
-        return success($list);
+
+        $list = Db::name('article')->alias('a')
+            ->leftJoin('users u','u.id = a.user_id')
+            ->where('a.display',1)
+            ->where('a.is_push',1)
+            ->order('a.order_by','desc')
+            ->order('a.modifyd_time','desc')
+            ->limit($start,$limit)
+            ->column('a.title,a.html,u.name,u.avatar,a.publish_time,a.modifyd_time');
+
+        $count =  Db::name('article')->alias('a')
+            ->leftJoin('users u','u.id = a.user_id')
+            ->where('a.display',1)
+            ->where('a.is_push',1)
+            ->count('a.id');
+
+        $data = [
+            'data'=>$list,
+            'count'=>$count
+        ];
+
+        return success($data);
         
     }
 

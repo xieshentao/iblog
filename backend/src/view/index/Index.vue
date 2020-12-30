@@ -19,7 +19,7 @@
             </el-input>
           </div>
         </div>
-        <div class="index-main">
+        <div class="index-main"  v-loading="loading">
           <div class="category-block" style="display: flex;flex-wrap:wrap;">
             <div v-for="category in categorys" class="category-item" style="margin: 10px 40px;">
               <el-badge  :value="category.parent" class="item" :type="category.type" style="user-select: none;">
@@ -30,17 +30,36 @@
           <div class="main-block" style="background-color: rgba(51,54,51,0.8)">
             <div v-for="(item,index) in blogList" style="width: 47%;height: 220px;background-color: white;margin:16px">
               <el-row style="height: 100%">
-                <el-col :span="7" v-bind:style="{'text-align':'center','background-color':getColor(),'height':'100%','display':'block','padding':'0 10px'}">
-                  {{item.title}}
+                <el-col :span="7" v-bind:style="{'background-color':blockColor[index],'height':'100%','display':'block','padding':'15px 15px'}" style="box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.6) inset;color:white ">
+                  <div style="display: flex;flex-direction: column;justify-content: space-around;height: 100%">
+
+                    <img :src="item.avatar" style="width: 70px;height: 70px;border-radius: 50%">
+                    {{item.name}}
+                    <div style="font-size: 10px">
+                     发布时间<br/>{{item.publish_time}}<br/>
+                     最后修改<br/>{{item.modifyd_time}}<br/>
+                    </div>
+
+                  </div>
                 </el-col>
-                <el-col :span="17" >
+                <el-col :span="17">
                   <div style="overflow: hidden;max-height: 100px;text-align: center">
-                    <el-link v-bind:href="'/Article?name=' + item.title" target="_blank" :underline="false" ><h1>{{item.title}}</h1></el-link>
+                    <el-link v-bind:href="'/Article?name=' + item.title" target="" :underline="false" ><h1>{{item.title}}</h1></el-link>
                   </div>
                   <el-row v-html="item.html" style="overflow: hidden;display: block;border-top: 1px solid #e6e6e6;font-size: 12px;max-height: 120px;padding: 5px">
                   </el-row>
                 </el-col>
               </el-row>
+            </div>
+            <div style="margin:30px 0px">
+            <el-pagination
+              background
+              :curr-page="nowPage"
+              layout="prev, pager, next"
+              @current-change="pageChange"
+              :hide-on-single-page="true"
+              :total="totalCount">
+            </el-pagination>
             </div>
           </div>
         </div>
@@ -81,7 +100,8 @@
                     '../../../static/system/bk9.jpg',
                     '../../../static/system/bk10.jpg',
                 ],
-                color:['#66FFFF','#FF9966','#2E8B57','#99CCCC','#FFCC99','#99CC99'],
+                color:['#66FFFF','#FF9966','#2E8B57','#99CCCC','#FFCC99','#99CC99','#336633','#99CCFF','#99CC99',
+                    '#66CCCC','#CCCCFF','#6666CC','#CCCC00','#99CC99','#66CCCC','#FF9900','#FFFFCC','#FF6666'],
                 title:'Iblog',
                 title2:'记录每一天',
                 blogTitle:'',
@@ -102,7 +122,9 @@
                 showCategory:[],
                 categorys:[],
                 blogList:[],
-
+                blockColor:[],
+                totalCount:0,
+                nowPage:1,
             }
         },
         methods:{
@@ -118,6 +140,10 @@
                         clearInterval(tid);
                     }
                 },180);
+            },
+            pageChange(val){
+              this.nowPage = val;
+              this.getBlogList();
             },
             showTitle(){
                 let title = this.title;
@@ -197,19 +223,27 @@
                 console.log(status,value)
             },
             getBlogList(){
-                util.get(this.api + '/blog/show_list.json',{name:name},(res)=>{
+                const data = {
+                    page:this.nowPage
+                };
+
+                util.get(this.api + '/blog/show_list.json',data,(res)=>{
                     if(res.success){
-                        this.blogList = res.data;
+                        this.getColor(res.data.data);
+                        this.blogList = res.data.data;
+                        this.totalCount = res.data.count;
+                        this.loading = false;
                     }else{
 
                     }
 
                 });
             },
-            getColor:function(){
+            getColor:function(blogList){
+                for (let i=0;i<blogList.length;i++){
                 let index = util.randomNum(0,this.color.length - 1);
-                let color = this.color[index];
-                return color;
+                this.blockColor.push(this.color[index]);
+                }
             },
             setBackground:function () {
                 this.backgroundStyle.minHeight = this.height+"px";
