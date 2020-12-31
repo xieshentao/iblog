@@ -117,25 +117,59 @@ class Blog extends IblogBase
         $start = ($page-1)*$limit;
 
 
-
         $list = Db::name('article')->alias('a')
             ->leftJoin('users u','u.id = a.user_id')
-            ->where('a.display',1)
+            ->leftJoin('articlemeta am',"am.blog_id = a.id AND am.type = 'category'")
+            ->leftJoin('category c','c.id= am.target_id');
+
+        if($category_id) $list = $list->where('c.id',$category_id);
+
+        $list = $list->where('a.display',1)
             ->where('a.is_push',1)
+            ->group('a.id')
             ->order('a.order_by','desc')
             ->order('a.modifyd_time','desc')
             ->limit($start,$limit)
-            ->column('a.title,a.html,u.name,u.avatar,a.publish_time,a.modifyd_time');
+            ->column('a.title,a.html,u.name,u.avatar,a.publish_time,a.modifyd_time,a.id');
+
 
         $count =  Db::name('article')->alias('a')
             ->leftJoin('users u','u.id = a.user_id')
-            ->where('a.display',1)
+            ->leftJoin('articlemeta am',"am.blog_id = a.id AND am.type = 'category'")
+            ->leftJoin('category c','c.id= am.target_id');
+        if($category_id) $count = $count->where('c.id',$category_id);
+        $count = $count ->where('a.display',1)
             ->where('a.is_push',1)
-            ->count('a.id');
+            ->group('a.id')
+            ->column('a.id');
+
+        $list_rs = [];
+        foreach ($list as $item){
+            $tmp = $item;
+
+            $category = Db::name('category')->alias('c')
+                ->leftJoin('articlemeta am','am.target_id = c.id')
+                ->leftJoin('category cp','cp.id = c.parent_id')
+                ->where('am.type','category')
+                ->where('am.blog_id',$item['id'])
+                ->column('c.name,cp.name parent_name');
+
+            if(count($category)>0){
+                $tmp['category'] = $category[0]['parent_name']?($category[0]['parent_name'].'/'.$category[0]['name']):$category[0]['name'];
+            }else{
+                $tmp['category'] = '';
+            }
+
+
+            $list_rs[] = $tmp;
+
+        }
+
+
 
         $data = [
             'data'=>$list,
-            'count'=>$count
+            'count'=>count($count)
         ];
 
         return success($data);

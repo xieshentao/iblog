@@ -33,8 +33,11 @@
                 <el-col :span="7" v-bind:style="{'background-color':blockColor[index],'height':'100%','display':'block','padding':'15px 15px'}" style="box-shadow: 6px 6px 6px 6px rgba(0, 0, 0, 0.6) inset;color:white ">
                   <div style="display: flex;flex-direction: column;justify-content: space-around;height: 100%">
 
-                    <img :src="item.avatar" style="width: 70px;height: 70px;border-radius: 50%">
-                    {{item.name}}
+                    <img :src="item.avatar" style="width: 50px;height: 50px;border-radius: 50%">
+                    {{item.name}}<br/>
+                    <div style="font-size: 12px">
+                    {{item.category?item.category:"未分类"}}
+                    </div>
                     <div style="font-size: 10px">
                      发布时间<br/>{{item.publish_time}}<br/>
                      最后修改<br/>{{item.modifyd_time}}<br/>
@@ -101,7 +104,7 @@
                     '../../../static/system/bk10.jpg',
                 ],
                 color:['#66FFFF','#FF9966','#2E8B57','#99CCCC','#FFCC99','#99CC99','#336633','#99CCFF','#99CC99',
-                    '#66CCCC','#CCCCFF','#6666CC','#CCCC00','#99CC99','#66CCCC','#FF9900','#FFFFCC','#FF6666'],
+                    '#66CCCC','#CCCCFF','#6666CC','#CCCC00','#99CC99','#66CCCC','#FF9900','#FF6666'],
                 title:'Iblog',
                 title2:'记录每一天',
                 blogTitle:'',
